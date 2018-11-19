@@ -1,0 +1,353 @@
+==> Preparing dataset volleyball
+==> creating model 'vgg19'
+p_dict ['features.0.weight', 'features.0.bias', 'features.2.weight', 'features.2.bias', 'features.5.weight', 'features.5.bias', 'features.7.weight', 'features.7.bias', 'features.10.weight', 'features.10.bias', 'features.12.weight', 'features.12.bias', 'features.14.weight', 'features.14.bias', 'features.16.weight', 'features.16.bias', 'features.19.weight', 'features.19.bias', 'features.21.weight', 'features.21.bias', 'features.23.weight', 'features.23.bias', 'features.25.weight', 'features.25.bias', 'features.28.weight', 'features.28.bias', 'features.30.weight', 'features.30.bias', 'features.32.weight', 'features.32.bias', 'features.34.weight', 'features.34.bias', 'fc6.weight', 'fc6.bias', 'fc7.weight', 'fc7.bias', 'classifier.weight', 'classifier.bias']
+sdict features.0.weight
+sdict features.0.bias
+sdict features.2.weight
+sdict features.2.bias
+sdict features.5.weight
+sdict features.5.bias
+sdict features.7.weight
+sdict features.7.bias
+sdict features.10.weight
+sdict features.10.bias
+sdict features.12.weight
+sdict features.12.bias
+sdict features.14.weight
+sdict features.14.bias
+sdict features.16.weight
+sdict features.16.bias
+sdict features.19.weight
+sdict features.19.bias
+sdict features.21.weight
+sdict features.21.bias
+sdict features.23.weight
+sdict features.23.bias
+sdict features.25.weight
+sdict features.25.bias
+sdict features.28.weight
+sdict features.28.bias
+sdict features.30.weight
+sdict features.30.bias
+sdict features.32.weight
+sdict features.32.bias
+sdict features.34.weight
+sdict features.34.bias
+sdict pclassifier.weight
+sdict pclassifier.bias
+sdict fc6.weight
+sdict fc6.bias
+sdict fc7.weight
+sdict fc7.bias
+sdict conv1da.weight
+sdict conv1db.weight
+sdict convLinear.weight
+sdict gclassifier.weight
+sdict gclassifier.bias
+sdict mlp1.fc1.weight
+sdict mlp1.fc1.bias
+sdict mlp1.fc2.weight
+sdict mlp1.fc2.bias
+sdict mlp2.fc1.weight
+sdict mlp2.fc1.bias
+sdict mlp2.fc2.weight
+sdict mlp2.fc2.bias
+sdict linear.weight
+sdict linear.bias
+    Total params: 104.75M
+
+Epoch: [1 | 300] LR: 0.001000
+cifar.py:271: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  losses.update(loss.data[0], inputs.size(0))
+cifar.py:272: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  top1.update(prec1[0], inputs.size(0))
+cifar.py:273: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  top5.update(prec5[0], inputs.size(0))
+[0.001, tensor(1.9991, device='cuda:0'), tensor(1.9872, device='cuda:0'), tensor(20.3067, device='cuda:0'), tensor(21.2416, device='cuda:0')]
+
+Epoch: [2 | 300] LR: 0.001000
+cifar.py:330: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  losses.update(loss.data[0], inputs.size(0))
+cifar.py:331: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  top1.update(prec1[0], inputs.size(0))
+cifar.py:332: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  top5.update(prec5[0], inputs.size(0))
+[0.001, tensor(1.8874, device='cuda:0'), tensor(1.8264, device='cuda:0'), tensor(27.1840, device='cuda:0'), tensor(31.3388, device='cuda:0')]
+
+Epoch: [3 | 300] LR: 0.001000
+[0.001, tensor(1.7278, device='cuda:0'), tensor(1.7967, device='cuda:0'), tensor(35.5948, device='cuda:0'), tensor(35.6769, device='cuda:0')]
+
+Epoch: [4 | 300] LR: 0.001000
+[0.001, tensor(1.6041, device='cuda:0'), tensor(1.6604, device='cuda:0'), tensor(41.1245, device='cuda:0'), tensor(38.5939, device='cuda:0')]
+
+Epoch: [5 | 300] LR: 0.001000
+[0.001, tensor(1.4611, device='cuda:0'), tensor(1.7614, device='cuda:0'), tensor(46.4684, device='cuda:0'), tensor(39.3418, device='cuda:0')]
+
+Epoch: [6 | 300] LR: 0.001000
+[0.001, tensor(1.3193, device='cuda:0'), tensor(1.4797, device='cuda:0'), tensor(54.9721, device='cuda:0'), tensor(48.2423, device='cuda:0')]
+
+Epoch: [7 | 300] LR: 0.001000
+[0.001, tensor(1.1911, device='cuda:0'), tensor(1.5148, device='cuda:0'), tensor(59.2007, device='cuda:0'), tensor(46.1481, device='cuda:0')]
+
+Epoch: [8 | 300] LR: 0.001000
+[0.001, tensor(1.0538, device='cuda:0'), tensor(1.5010, device='cuda:0'), tensor(62.2677, device='cuda:0'), tensor(50.0374, device='cuda:0')]
+
+Epoch: [9 | 300] LR: 0.001000
+[0.001, tensor(0.9190, device='cuda:0'), tensor(1.5058, device='cuda:0'), tensor(68.3085, device='cuda:0'), tensor(46.5221, device='cuda:0')]
+
+Epoch: [10 | 300] LR: 0.001000
+[0.001, tensor(0.7971, device='cuda:0'), tensor(1.5363, device='cuda:0'), tensor(73.9777, device='cuda:0'), tensor(50.4114, device='cuda:0')]
+
+Epoch: [11 | 300] LR: 0.001000
+[0.001, tensor(0.6617, device='cuda:0'), tensor(1.6356, device='cuda:0'), tensor(77.8810, device='cuda:0'), tensor(49.5138, device='cuda:0')]
+
+Epoch: [12 | 300] LR: 0.001000
+[0.001, tensor(0.6203, device='cuda:0'), tensor(1.9020, device='cuda:0'), tensor(78.4851, device='cuda:0'), tensor(36.4996, device='cuda:0')]
+
+Epoch: [13 | 300] LR: 0.001000
+[0.001, tensor(0.5077, device='cuda:0'), tensor(2.2149, device='cuda:0'), tensor(83.1320, device='cuda:0'), tensor(50.8601, device='cuda:0')]
+
+Epoch: [14 | 300] LR: 0.001000
+[0.001, tensor(0.4704, device='cuda:0'), tensor(2.5879, device='cuda:0'), tensor(83.8755, device='cuda:0'), tensor(49.0651, device='cuda:0')]
+
+Epoch: [15 | 300] LR: 0.001000
+[0.001, tensor(0.4481, device='cuda:0'), tensor(1.8312, device='cuda:0'), tensor(85.4089, device='cuda:0'), tensor(51.1593, device='cuda:0')]
+
+Epoch: [16 | 300] LR: 0.001000
+[0.001, tensor(0.3673, device='cuda:0'), tensor(2.6063, device='cuda:0'), tensor(87.7323, device='cuda:0'), tensor(44.2034, device='cuda:0')]
+
+Epoch: [17 | 300] LR: 0.001000
+[0.001, tensor(0.2957, device='cuda:0'), tensor(1.4851, device='cuda:0'), tensor(90.7993, device='cuda:0'), tensor(47.3448, device='cuda:0')]
+
+Epoch: [18 | 300] LR: 0.001000
+[0.001, tensor(0.2818, device='cuda:0'), tensor(2.7083, device='cuda:0'), tensor(90.5669, device='cuda:0'), tensor(52.2812, device='cuda:0')]
+
+Epoch: [19 | 300] LR: 0.001000
+[0.001, tensor(0.2186, device='cuda:0'), tensor(2.7163, device='cuda:0'), tensor(92.9833, device='cuda:0'), tensor(43.6051, device='cuda:0')]
+
+Epoch: [20 | 300] LR: 0.001000
+[0.001, tensor(0.2068, device='cuda:0'), tensor(2.8401, device='cuda:0'), tensor(93.3550, device='cuda:0'), tensor(49.0651, device='cuda:0')]
+
+Epoch: [21 | 300] LR: 0.001000
+[0.001, tensor(0.2517, device='cuda:0'), tensor(2.0096, device='cuda:0'), tensor(91.6357, device='cuda:0'), tensor(51.9821, device='cuda:0')]
+
+Epoch: [22 | 300] LR: 0.001000
+[0.001, tensor(0.1664, device='cuda:0'), tensor(2.6984, device='cuda:0'), tensor(93.9126, device='cuda:0'), tensor(48.5415, device='cuda:0')]
+
+Epoch: [23 | 300] LR: 0.001000
+[0.001, tensor(0.1353, device='cuda:0'), tensor(2.1545, device='cuda:0'), tensor(95.7714, device='cuda:0'), tensor(52.2812, device='cuda:0')]
+
+Epoch: [24 | 300] LR: 0.001000
+[0.001, tensor(0.0615, device='cuda:0'), tensor(2.3738, device='cuda:0'), tensor(98.0483, device='cuda:0'), tensor(50.6358, device='cuda:0')]
+
+Epoch: [25 | 300] LR: 0.001000
+[0.001, tensor(0.1058, device='cuda:0'), tensor(1.8815, device='cuda:0'), tensor(96.0967, device='cuda:0'), tensor(51.2341, device='cuda:0')]
+
+Epoch: [26 | 300] LR: 0.001000
+[0.001, tensor(0.1321, device='cuda:0'), tensor(2.4647, device='cuda:0'), tensor(95.8643, device='cuda:0'), tensor(49.2895, device='cuda:0')]
+
+Epoch: [27 | 300] LR: 0.001000
+[0.001, tensor(0.1492, device='cuda:0'), tensor(3.8385, device='cuda:0'), tensor(95.2602, device='cuda:0'), tensor(47.5692, device='cuda:0')]
+
+Epoch: [28 | 300] LR: 0.001000
+[0.001, tensor(0.1807, device='cuda:0'), tensor(2.1358, device='cuda:0'), tensor(94.3773, device='cuda:0'), tensor(49.8130, device='cuda:0')]
+
+Epoch: [29 | 300] LR: 0.001000
+[0.001, tensor(0.1541, device='cuda:0'), tensor(2.3368, device='cuda:0'), tensor(94.5632, device='cuda:0'), tensor(51.4585, device='cuda:0')]
+
+Epoch: [30 | 300] LR: 0.001000
+[0.001, tensor(0.1266, device='cuda:0'), tensor(2.4632, device='cuda:0'), tensor(96.5149, device='cuda:0'), tensor(47.1204, device='cuda:0')]
+
+Epoch: [31 | 300] LR: 0.001000
+[0.001, tensor(0.1209, device='cuda:0'), tensor(2.4246, device='cuda:0'), tensor(96.0967, device='cuda:0'), tensor(46.0733, device='cuda:0')]
+
+Epoch: [32 | 300] LR: 0.001000
+[0.001, tensor(0.1022, device='cuda:0'), tensor(3.1048, device='cuda:0'), tensor(96.8401, device='cuda:0'), tensor(46.7464, device='cuda:0')]
+
+Epoch: [33 | 300] LR: 0.001000
+[0.001, tensor(0.1298, device='cuda:0'), tensor(2.7513, device='cuda:0'), tensor(95.7249, device='cuda:0'), tensor(50.9349, device='cuda:0')]
+
+Epoch: [34 | 300] LR: 0.001000
+[0.001, tensor(0.0973, device='cuda:0'), tensor(2.5091, device='cuda:0'), tensor(96.8866, device='cuda:0'), tensor(51.9821, device='cuda:0')]
+
+Epoch: [35 | 300] LR: 0.001000
+[0.001, tensor(0.0907, device='cuda:0'), tensor(4.4415, device='cuda:0'), tensor(97.0260, device='cuda:0'), tensor(44.6522, device='cuda:0')]
+
+Epoch: [36 | 300] LR: 0.001000
+[0.001, tensor(0.1425, device='cuda:0'), tensor(2.4691, device='cuda:0'), tensor(95.4461, device='cuda:0'), tensor(50.2618, device='cuda:0')]
+
+Epoch: [37 | 300] LR: 0.001000
+[0.001, tensor(0.0769, device='cuda:0'), tensor(2.6319, device='cuda:0'), tensor(97.9089, device='cuda:0'), tensor(48.7659, device='cuda:0')]
+
+Epoch: [38 | 300] LR: 0.001000
+[0.001, tensor(0.0658, device='cuda:0'), tensor(2.4503, device='cuda:0'), tensor(97.8160, device='cuda:0'), tensor(54.3007, device='cuda:0')]
+
+Epoch: [39 | 300] LR: 0.001000
+[0.001, tensor(0.0035, device='cuda:0'), tensor(3.4277, device='cuda:0'), tensor(99.9071, device='cuda:0'), tensor(50.1122, device='cuda:0')]
+
+Epoch: [40 | 300] LR: 0.001000
+[0.001, tensor(0.0597, device='cuda:0'), tensor(2.9698, device='cuda:0'), tensor(98.2807, device='cuda:0'), tensor(47.4944, device='cuda:0')]
+
+Epoch: [41 | 300] LR: 0.001000
+[0.001, tensor(0.0852, device='cuda:0'), tensor(2.7688, device='cuda:0'), tensor(97.3513, device='cuda:0'), tensor(50.2618, device='cuda:0')]
+
+Epoch: [42 | 300] LR: 0.001000
+[0.001, tensor(0.0407, device='cuda:0'), tensor(2.4096, device='cuda:0'), tensor(98.7454, device='cuda:0'), tensor(50.4862, device='cuda:0')]
+
+Epoch: [43 | 300] LR: 0.001000
+[0.001, tensor(0.0195, device='cuda:0'), tensor(2.6868, device='cuda:0'), tensor(99.5353, device='cuda:0'), tensor(50.4862, device='cuda:0')]
+
+Epoch: [44 | 300] LR: 0.001000
+[0.001, tensor(0.0007, device='cuda:0'), tensor(2.9446, device='cuda:0'), tensor(100., device='cuda:0'), tensor(52.7300, device='cuda:0')]
+
+Epoch: [45 | 300] LR: 0.001000
+[0.001, tensor(0.0001, device='cuda:0'), tensor(2.7356, device='cuda:0'), tensor(100., device='cuda:0'), tensor(52.4308, device='cuda:0')]
+
+Epoch: [46 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.6159, device='cuda:0'), tensor(100., device='cuda:0'), tensor(52.5804, device='cuda:0')]
+
+Epoch: [47 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.5456, device='cuda:0'), tensor(100., device='cuda:0'), tensor(52.5804, device='cuda:0')]
+
+Epoch: [48 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.5094, device='cuda:0'), tensor(100., device='cuda:0'), tensor(52.5804, device='cuda:0')]
+
+Epoch: [49 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.4837, device='cuda:0'), tensor(100., device='cuda:0'), tensor(52.5804, device='cuda:0')]
+
+Epoch: [50 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.4748, device='cuda:0'), tensor(100., device='cuda:0'), tensor(52.8048, device='cuda:0')]
+
+Epoch: [51 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.4666, device='cuda:0'), tensor(100., device='cuda:0'), tensor(52.5804, device='cuda:0')]
+
+Epoch: [52 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.4651, device='cuda:0'), tensor(100., device='cuda:0'), tensor(52.2812, device='cuda:0')]
+
+Epoch: [53 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.4687, device='cuda:0'), tensor(100., device='cuda:0'), tensor(52.2064, device='cuda:0')]
+
+Epoch: [54 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.4744, device='cuda:0'), tensor(100., device='cuda:0'), tensor(52.2812, device='cuda:0')]
+
+Epoch: [55 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.4863, device='cuda:0'), tensor(100., device='cuda:0'), tensor(52.0568, device='cuda:0')]
+
+Epoch: [56 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.4975, device='cuda:0'), tensor(100., device='cuda:0'), tensor(51.9073, device='cuda:0')]
+
+Epoch: [57 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.5111, device='cuda:0'), tensor(100., device='cuda:0'), tensor(51.7577, device='cuda:0')]
+
+Epoch: [58 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.5299, device='cuda:0'), tensor(100., device='cuda:0'), tensor(51.5333, device='cuda:0')]
+
+Epoch: [59 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.5491, device='cuda:0'), tensor(100., device='cuda:0'), tensor(51.5333, device='cuda:0')]
+
+Epoch: [60 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.5666, device='cuda:0'), tensor(100., device='cuda:0'), tensor(51.7577, device='cuda:0')]
+
+Epoch: [61 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.5897, device='cuda:0'), tensor(100., device='cuda:0'), tensor(51.2341, device='cuda:0')]
+
+Epoch: [62 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.6180, device='cuda:0'), tensor(100., device='cuda:0'), tensor(51.4585, device='cuda:0')]
+
+Epoch: [63 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.6375, device='cuda:0'), tensor(100., device='cuda:0'), tensor(51.3089, device='cuda:0')]
+
+Epoch: [64 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.6532, device='cuda:0'), tensor(100., device='cuda:0'), tensor(51.2341, device='cuda:0')]
+
+Epoch: [65 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:0'), tensor(2.6820, device='cuda:0'), tensor(100., device='cuda:0'), tensor(51.0097, device='cuda:0')]
+
+Epoch: [66 | 300] LR: 0.001000
+Process Process-525:
+Traceback (most recent call last):
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/process.py", line 258, in _bootstrap
+    self.run()
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/process.py", line 93, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/junwen/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 106, in _worker_loop
+    samples = collate_fn([dataset[i] for i in batch_indices])
+  File "/home/junwen/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 106, in <listcomp>
+    samples = collate_fn([dataset[i] for i in batch_indices])
+  File "/home/junwen/opengit/group_gcn/dataset_vol_graph.py", line 61, in __getitem__
+    buffer, dist= self.load_frames(self.fnames[index], self.bboxes[index])
+  File "/home/junwen/opengit/group_gcn/dataset_vol_graph.py", line 140, in load_frames
+    person = cv2.resize(person,(self.resize_width, self.resize_height))
+KeyboardInterrupt
+Process Process-526:
+Traceback (most recent call last):
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/process.py", line 258, in _bootstrap
+    self.run()
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/process.py", line 93, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/junwen/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 106, in _worker_loop
+    samples = collate_fn([dataset[i] for i in batch_indices])
+  File "/home/junwen/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 106, in <listcomp>
+    samples = collate_fn([dataset[i] for i in batch_indices])
+  File "/home/junwen/opengit/group_gcn/dataset_vol_graph.py", line 61, in __getitem__
+    buffer, dist= self.load_frames(self.fnames[index], self.bboxes[index])
+  File "/home/junwen/opengit/group_gcn/dataset_vol_graph.py", line 128, in load_frames
+    frame = cv2.imread(frame_name)
+KeyboardInterrupt
+Process Process-528:
+Traceback (most recent call last):
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/process.py", line 258, in _bootstrap
+    self.run()
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/process.py", line 93, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/junwen/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 106, in _worker_loop
+    samples = collate_fn([dataset[i] for i in batch_indices])
+  File "/home/junwen/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 106, in <listcomp>
+    samples = collate_fn([dataset[i] for i in batch_indices])
+  File "/home/junwen/opengit/group_gcn/dataset_vol_graph.py", line 61, in __getitem__
+    buffer, dist= self.load_frames(self.fnames[index], self.bboxes[index])
+  File "/home/junwen/opengit/group_gcn/dataset_vol_graph.py", line 128, in load_frames
+    frame = cv2.imread(frame_name)
+KeyboardInterrupt
+Process Process-527:
+Traceback (most recent call last):
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/process.py", line 258, in _bootstrap
+    self.run()
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/process.py", line 93, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/junwen/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 106, in _worker_loop
+    samples = collate_fn([dataset[i] for i in batch_indices])
+  File "/home/junwen/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 106, in <listcomp>
+    samples = collate_fn([dataset[i] for i in batch_indices])
+  File "/home/junwen/opengit/group_gcn/dataset_vol_graph.py", line 61, in __getitem__
+    buffer, dist= self.load_frames(self.fnames[index], self.bboxes[index])
+  File "/home/junwen/opengit/group_gcn/dataset_vol_graph.py", line 128, in load_frames
+    frame = cv2.imread(frame_name)
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "cifar.py", line 368, in <module>
+    main()
+  File "cifar.py", line 219, in main
+    test_loss, test_acc = test(testloader, model, criterion, epoch, use_cuda)
+  File "cifar.py", line 314, in test
+    for batch_idx, (inputs, targets, dists) in enumerate(testloader):
+  File "/home/junwen/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 330, in __next__
+    idx, batch = self._get_batch()
+  File "/home/junwen/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 309, in _get_batch
+    return self.data_queue.get()
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/queues.py", line 335, in get
+    res = self._reader.recv_bytes()
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/connection.py", line 216, in recv_bytes
+    buf = self._recv_bytes(maxlength)
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/connection.py", line 407, in _recv_bytes
+    buf = self._recv(4)
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/connection.py", line 379, in _recv
+    chunk = read(handle, remaining)
+KeyboardInterrupt
+Error in atexit._run_exitfuncs:
+Traceback (most recent call last):
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/popen_fork.py", line 28, in poll
+    pid, sts = os.waitpid(self.pid, flag)
+  File "/home/junwen/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 227, in handler
+    _error_if_any_worker_fails()
+RuntimeError: DataLoader worker (pid 21430) exited unexpectedly with exit code 1. Details are lost due to multiprocessing. Rerunning with num_workers=0 may give better error trace.

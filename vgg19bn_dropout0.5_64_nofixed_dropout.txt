@@ -1,0 +1,189 @@
+==> Preparing dataset volleyball
+==> creating model 'vgg19_bn'
+p_dict ['features.0.weight', 'features.0.bias', 'features.1.weight', 'features.1.bias', 'features.1.running_mean', 'features.1.running_var', 'features.1.num_batches_tracked', 'features.3.weight', 'features.3.bias', 'features.4.weight', 'features.4.bias', 'features.4.running_mean', 'features.4.running_var', 'features.4.num_batches_tracked', 'features.7.weight', 'features.7.bias', 'features.8.weight', 'features.8.bias', 'features.8.running_mean', 'features.8.running_var', 'features.8.num_batches_tracked', 'features.10.weight', 'features.10.bias', 'features.11.weight', 'features.11.bias', 'features.11.running_mean', 'features.11.running_var', 'features.11.num_batches_tracked', 'features.14.weight', 'features.14.bias', 'features.15.weight', 'features.15.bias', 'features.15.running_mean', 'features.15.running_var', 'features.15.num_batches_tracked', 'features.17.weight', 'features.17.bias', 'features.18.weight', 'features.18.bias', 'features.18.running_mean', 'features.18.running_var', 'features.18.num_batches_tracked', 'features.20.weight', 'features.20.bias', 'features.21.weight', 'features.21.bias', 'features.21.running_mean', 'features.21.running_var', 'features.21.num_batches_tracked', 'features.23.weight', 'features.23.bias', 'features.24.weight', 'features.24.bias', 'features.24.running_mean', 'features.24.running_var', 'features.24.num_batches_tracked', 'features.27.weight', 'features.27.bias', 'features.28.weight', 'features.28.bias', 'features.28.running_mean', 'features.28.running_var', 'features.28.num_batches_tracked', 'features.30.weight', 'features.30.bias', 'features.31.weight', 'features.31.bias', 'features.31.running_mean', 'features.31.running_var', 'features.31.num_batches_tracked', 'features.33.weight', 'features.33.bias', 'features.34.weight', 'features.34.bias', 'features.34.running_mean', 'features.34.running_var', 'features.34.num_batches_tracked', 'features.36.weight', 'features.36.bias', 'features.37.weight', 'features.37.bias', 'features.37.running_mean', 'features.37.running_var', 'features.37.num_batches_tracked', 'features.40.weight', 'features.40.bias', 'features.41.weight', 'features.41.bias', 'features.41.running_mean', 'features.41.running_var', 'features.41.num_batches_tracked', 'features.43.weight', 'features.43.bias', 'features.44.weight', 'features.44.bias', 'features.44.running_mean', 'features.44.running_var', 'features.44.num_batches_tracked', 'features.46.weight', 'features.46.bias', 'features.47.weight', 'features.47.bias', 'features.47.running_mean', 'features.47.running_var', 'features.47.num_batches_tracked', 'features.49.weight', 'features.49.bias', 'features.50.weight', 'features.50.bias', 'features.50.running_mean', 'features.50.running_var', 'features.50.num_batches_tracked', 'fc6.weight', 'fc6.bias', 'fc7.weight', 'fc7.bias', 'classifier.weight', 'classifier.bias']
+sdict features.0.weight
+sdict features.0.bias
+sdict features.1.weight
+sdict features.1.bias
+sdict features.1.running_mean
+sdict features.1.running_var
+sdict features.1.num_batches_tracked
+sdict features.3.weight
+sdict features.3.bias
+sdict features.4.weight
+sdict features.4.bias
+sdict features.4.running_mean
+sdict features.4.running_var
+sdict features.4.num_batches_tracked
+sdict features.7.weight
+sdict features.7.bias
+sdict features.8.weight
+sdict features.8.bias
+sdict features.8.running_mean
+sdict features.8.running_var
+sdict features.8.num_batches_tracked
+sdict features.10.weight
+sdict features.10.bias
+sdict features.11.weight
+sdict features.11.bias
+sdict features.11.running_mean
+sdict features.11.running_var
+sdict features.11.num_batches_tracked
+sdict features.14.weight
+sdict features.14.bias
+sdict features.15.weight
+sdict features.15.bias
+sdict features.15.running_mean
+sdict features.15.running_var
+sdict features.15.num_batches_tracked
+sdict features.17.weight
+sdict features.17.bias
+sdict features.18.weight
+sdict features.18.bias
+sdict features.18.running_mean
+sdict features.18.running_var
+sdict features.18.num_batches_tracked
+sdict features.20.weight
+sdict features.20.bias
+sdict features.21.weight
+sdict features.21.bias
+sdict features.21.running_mean
+sdict features.21.running_var
+sdict features.21.num_batches_tracked
+sdict features.23.weight
+sdict features.23.bias
+sdict features.24.weight
+sdict features.24.bias
+sdict features.24.running_mean
+sdict features.24.running_var
+sdict features.24.num_batches_tracked
+sdict features.27.weight
+sdict features.27.bias
+sdict features.28.weight
+sdict features.28.bias
+sdict features.28.running_mean
+sdict features.28.running_var
+sdict features.28.num_batches_tracked
+sdict features.30.weight
+sdict features.30.bias
+sdict features.31.weight
+sdict features.31.bias
+sdict features.31.running_mean
+sdict features.31.running_var
+sdict features.31.num_batches_tracked
+sdict features.33.weight
+sdict features.33.bias
+sdict features.34.weight
+sdict features.34.bias
+sdict features.34.running_mean
+sdict features.34.running_var
+sdict features.34.num_batches_tracked
+sdict features.36.weight
+sdict features.36.bias
+sdict features.37.weight
+sdict features.37.bias
+sdict features.37.running_mean
+sdict features.37.running_var
+sdict features.37.num_batches_tracked
+sdict features.40.weight
+sdict features.40.bias
+sdict features.41.weight
+sdict features.41.bias
+sdict features.41.running_mean
+sdict features.41.running_var
+sdict features.41.num_batches_tracked
+sdict features.43.weight
+sdict features.43.bias
+sdict features.44.weight
+sdict features.44.bias
+sdict features.44.running_mean
+sdict features.44.running_var
+sdict features.44.num_batches_tracked
+sdict features.46.weight
+sdict features.46.bias
+sdict features.47.weight
+sdict features.47.bias
+sdict features.47.running_mean
+sdict features.47.running_var
+sdict features.47.num_batches_tracked
+sdict features.49.weight
+sdict features.49.bias
+sdict features.50.weight
+sdict features.50.bias
+sdict features.50.running_mean
+sdict features.50.running_var
+sdict features.50.num_batches_tracked
+sdict pclassifier.weight
+sdict pclassifier.bias
+sdict fc6.weight
+sdict fc6.bias
+sdict fc7.weight
+sdict fc7.bias
+sdict conv1da.weight
+sdict conv1db.weight
+sdict convLinear.weight
+sdict gclassifier.weight
+sdict gclassifier.bias
+sdict mlp1.fc1.weight
+sdict mlp1.fc1.bias
+sdict mlp1.fc2.weight
+sdict mlp1.fc2.bias
+sdict mlp2.fc1.weight
+sdict mlp2.fc1.bias
+sdict mlp2.fc2.weight
+sdict mlp2.fc2.bias
+sdict linear.weight
+sdict linear.bias
+    Total params: 104.76M
+
+Epoch: [1 | 300] LR: 0.001000
+cifar.py:271: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  losses.update(loss.data[0], inputs.size(0))
+cifar.py:272: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  top1.update(prec1[0], inputs.size(0))
+cifar.py:273: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  top5.update(prec5[0], inputs.size(0))
+[0.001, tensor(2.0778, device='cuda:1'), tensor(2.0762, device='cuda:1'), tensor(17.5186, device='cuda:1'), tensor(17.0531, device='cuda:1')]
+
+Epoch: [2 | 300] LR: 0.001000
+cifar.py:330: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  losses.update(loss.data[0], inputs.size(0))
+cifar.py:331: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  top1.update(prec1[0], inputs.size(0))
+cifar.py:332: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  top5.update(prec5[0], inputs.size(0))
+[0.001, tensor(2.0724, device='cuda:1'), tensor(2.0671, device='cuda:1'), tensor(18.0297, device='cuda:1'), tensor(16.6043, device='cuda:1')]
+
+Epoch: [3 | 300] LR: 0.001000
+[0.001, tensor(2.0163, device='cuda:1'), tensor(1.9432, device='cuda:1'), tensor(19.9349, device='cuda:1'), tensor(22.7375, device='cuda:1')]
+
+Epoch: [4 | 300] LR: 0.001000
+[0.001, tensor(1.8496, device='cuda:1'), tensor(1.8912, device='cuda:1'), tensor(27.5093, device='cuda:1'), tensor(25.2057, device='cuda:1')]
+
+Epoch: [5 | 300] LR: 0.001000
+[0.001, tensor(1.6908, device='cuda:1'), tensor(1.8778, device='cuda:1'), tensor(34.3866, device='cuda:1'), tensor(25.6545, device='cuda:1')]
+
+Epoch: [6 | 300] LR: 0.001000
+[0.001, tensor(1.5289, device='cuda:1'), tensor(1.8898, device='cuda:1'), tensor(42.6580, device='cuda:1'), tensor(28.5714, device='cuda:1')]
+
+Epoch: [7 | 300] LR: 0.001000
+Traceback (most recent call last):
+  File "cifar.py", line 368, in <module>
+    main()
+  File "cifar.py", line 218, in main
+    train_loss, train_acc = train(trainloader, model, criterion, optimizer, epoch, use_cuda)
+  File "cifar.py", line 257, in train
+    for inputs, targets, dists in trainloader:
+  File "/home/junwen/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 330, in __next__
+    idx, batch = self._get_batch()
+  File "/home/junwen/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 309, in _get_batch
+    return self.data_queue.get()
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/queues.py", line 335, in get
+    res = self._reader.recv_bytes()
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/connection.py", line 216, in recv_bytes
+    buf = self._recv_bytes(maxlength)
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/connection.py", line 407, in _recv_bytes
+    buf = self._recv(4)
+  File "/home/junwen/anaconda3/lib/python3.6/multiprocessing/connection.py", line 379, in _recv
+    chunk = read(handle, remaining)
+KeyboardInterrupt

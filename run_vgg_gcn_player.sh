@@ -1,0 +1,1 @@
+python cifar.py -e -a vgg19 -c "checkpoints/volleyball/vgg19player/" --resume "/home/jc1088/Documents/opengit/volleyball/pytorch-classification/checkpoints/volleyball/vgg19player/model_best.pth.tar" 2>&1 | tee log/vgg_gcn_player_56infer.txt

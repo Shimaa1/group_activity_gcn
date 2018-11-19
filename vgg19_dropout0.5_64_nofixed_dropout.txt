@@ -1,0 +1,266 @@
+==> Preparing dataset volleyball
+==> creating model 'vgg19'
+p_dict ['features.0.weight', 'features.0.bias', 'features.2.weight', 'features.2.bias', 'features.5.weight', 'features.5.bias', 'features.7.weight', 'features.7.bias', 'features.10.weight', 'features.10.bias', 'features.12.weight', 'features.12.bias', 'features.14.weight', 'features.14.bias', 'features.16.weight', 'features.16.bias', 'features.19.weight', 'features.19.bias', 'features.21.weight', 'features.21.bias', 'features.23.weight', 'features.23.bias', 'features.25.weight', 'features.25.bias', 'features.28.weight', 'features.28.bias', 'features.30.weight', 'features.30.bias', 'features.32.weight', 'features.32.bias', 'features.34.weight', 'features.34.bias', 'fc6.weight', 'fc6.bias', 'fc7.weight', 'fc7.bias', 'classifier.weight', 'classifier.bias']
+sdict features.0.weight
+sdict features.0.bias
+sdict features.2.weight
+sdict features.2.bias
+sdict features.5.weight
+sdict features.5.bias
+sdict features.7.weight
+sdict features.7.bias
+sdict features.10.weight
+sdict features.10.bias
+sdict features.12.weight
+sdict features.12.bias
+sdict features.14.weight
+sdict features.14.bias
+sdict features.16.weight
+sdict features.16.bias
+sdict features.19.weight
+sdict features.19.bias
+sdict features.21.weight
+sdict features.21.bias
+sdict features.23.weight
+sdict features.23.bias
+sdict features.25.weight
+sdict features.25.bias
+sdict features.28.weight
+sdict features.28.bias
+sdict features.30.weight
+sdict features.30.bias
+sdict features.32.weight
+sdict features.32.bias
+sdict features.34.weight
+sdict features.34.bias
+sdict pclassifier.weight
+sdict pclassifier.bias
+sdict fc6.weight
+sdict fc6.bias
+sdict fc7.weight
+sdict fc7.bias
+sdict conv1da.weight
+sdict conv1db.weight
+sdict convLinear.weight
+sdict gclassifier.weight
+sdict gclassifier.bias
+sdict mlp1.fc1.weight
+sdict mlp1.fc1.bias
+sdict mlp1.fc2.weight
+sdict mlp1.fc2.bias
+sdict mlp2.fc1.weight
+sdict mlp2.fc1.bias
+sdict mlp2.fc2.weight
+sdict mlp2.fc2.bias
+sdict linear.weight
+sdict linear.bias
+    Total params: 104.75M
+
+Epoch: [1 | 300] LR: 0.001000
+cifar.py:271: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  losses.update(loss.data[0], inputs.size(0))
+cifar.py:272: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  top1.update(prec1[0], inputs.size(0))
+cifar.py:273: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  top5.update(prec5[0], inputs.size(0))
+[0.001, tensor(2.0253, device='cuda:2'), tensor(1.9310, device='cuda:2'), tensor(20.0743, device='cuda:2'), tensor(24.3829, device='cuda:2')]
+
+Epoch: [2 | 300] LR: 0.001000
+cifar.py:330: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  losses.update(loss.data[0], inputs.size(0))
+cifar.py:331: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  top1.update(prec1[0], inputs.size(0))
+cifar.py:332: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  top5.update(prec5[0], inputs.size(0))
+[0.001, tensor(1.7833, device='cuda:2'), tensor(1.8260, device='cuda:2'), tensor(32.7602, device='cuda:2'), tensor(31.3388, device='cuda:2')]
+
+Epoch: [3 | 300] LR: 0.001000
+[0.001, tensor(1.3113, device='cuda:2'), tensor(1.5560, device='cuda:2'), tensor(53.9963, device='cuda:2'), tensor(44.1286, device='cuda:2')]
+
+Epoch: [4 | 300] LR: 0.001000
+[0.001, tensor(0.9256, device='cuda:2'), tensor(1.7662, device='cuda:2'), tensor(68.2156, device='cuda:2'), tensor(42.2588, device='cuda:2')]
+
+Epoch: [5 | 300] LR: 0.001000
+[0.001, tensor(0.6085, device='cuda:2'), tensor(1.6583, device='cuda:2'), tensor(79.7862, device='cuda:2'), tensor(45.5497, device='cuda:2')]
+
+Epoch: [6 | 300] LR: 0.001000
+[0.001, tensor(0.4879, device='cuda:2'), tensor(1.6057, device='cuda:2'), tensor(84.4796, device='cuda:2'), tensor(47.2700, device='cuda:2')]
+
+Epoch: [7 | 300] LR: 0.001000
+[0.001, tensor(0.3441, device='cuda:2'), tensor(2.1319, device='cuda:2'), tensor(89.9164, device='cuda:2'), tensor(44.3530, device='cuda:2')]
+
+Epoch: [8 | 300] LR: 0.001000
+[0.001, tensor(0.2768, device='cuda:2'), tensor(2.7779, device='cuda:2'), tensor(90.4275, device='cuda:2'), tensor(42.1840, device='cuda:2')]
+
+Epoch: [9 | 300] LR: 0.001000
+[0.001, tensor(0.1971, device='cuda:2'), tensor(2.0803, device='cuda:2'), tensor(93.5409, device='cuda:2'), tensor(46.2977, device='cuda:2')]
+
+Epoch: [10 | 300] LR: 0.001000
+[0.001, tensor(0.2557, device='cuda:2'), tensor(2.2418, device='cuda:2'), tensor(91.4033, device='cuda:2'), tensor(42.1840, device='cuda:2')]
+
+Epoch: [11 | 300] LR: 0.001000
+[0.001, tensor(0.1802, device='cuda:2'), tensor(2.4288, device='cuda:2'), tensor(93.8662, device='cuda:2'), tensor(47.0456, device='cuda:2')]
+
+Epoch: [12 | 300] LR: 0.001000
+[0.001, tensor(0.1336, device='cuda:2'), tensor(2.5173, device='cuda:2'), tensor(95.9572, device='cuda:2'), tensor(48.0180, device='cuda:2')]
+
+Epoch: [13 | 300] LR: 0.001000
+[0.001, tensor(0.1196, device='cuda:2'), tensor(2.6434, device='cuda:2'), tensor(95.7249, device='cuda:2'), tensor(51.9073, device='cuda:2')]
+
+Epoch: [14 | 300] LR: 0.001000
+[0.001, tensor(0.1406, device='cuda:2'), tensor(2.8826, device='cuda:2'), tensor(96.2361, device='cuda:2'), tensor(43.8295, device='cuda:2')]
+
+Epoch: [15 | 300] LR: 0.001000
+[0.001, tensor(0.0535, device='cuda:2'), tensor(3.4634, device='cuda:2'), tensor(97.9554, device='cuda:2'), tensor(49.7382, device='cuda:2')]
+
+Epoch: [16 | 300] LR: 0.001000
+[0.001, tensor(0.1421, device='cuda:2'), tensor(2.5306, device='cuda:2'), tensor(95.4926, device='cuda:2'), tensor(49.1399, device='cuda:2')]
+
+Epoch: [17 | 300] LR: 0.001000
+[0.001, tensor(0.0409, device='cuda:2'), tensor(4.1553, device='cuda:2'), tensor(98.9312, device='cuda:2'), tensor(51.7577, device='cuda:2')]
+
+Epoch: [18 | 300] LR: 0.001000
+[0.001, tensor(0.0754, device='cuda:2'), tensor(3.1356, device='cuda:2'), tensor(97.6766, device='cuda:2'), tensor(49.8878, device='cuda:2')]
+
+Epoch: [19 | 300] LR: 0.001000
+[0.001, tensor(0.0765, device='cuda:2'), tensor(3.3824, device='cuda:2'), tensor(97.4907, device='cuda:2'), tensor(42.8571, device='cuda:2')]
+
+Epoch: [20 | 300] LR: 0.001000
+[0.001, tensor(0.0981, device='cuda:2'), tensor(3.0401, device='cuda:2'), tensor(96.9331, device='cuda:2'), tensor(48.8407, device='cuda:2')]
+
+Epoch: [21 | 300] LR: 0.001000
+[0.001, tensor(0.0785, device='cuda:2'), tensor(2.9802, device='cuda:2'), tensor(97.5372, device='cuda:2'), tensor(49.8130, device='cuda:2')]
+
+Epoch: [22 | 300] LR: 0.001000
+[0.001, tensor(0.0889, device='cuda:2'), tensor(2.6311, device='cuda:2'), tensor(97.1190, device='cuda:2'), tensor(50.8601, device='cuda:2')]
+
+Epoch: [23 | 300] LR: 0.001000
+[0.001, tensor(0.0409, device='cuda:2'), tensor(2.7897, device='cuda:2'), tensor(98.7918, device='cuda:2'), tensor(51.6081, device='cuda:2')]
+
+Epoch: [24 | 300] LR: 0.001000
+[0.001, tensor(0.0492, device='cuda:2'), tensor(2.5179, device='cuda:2'), tensor(98.5130, device='cuda:2'), tensor(50.4114, device='cuda:2')]
+
+Epoch: [25 | 300] LR: 0.001000
+[0.001, tensor(0.0040, device='cuda:2'), tensor(3.9504, device='cuda:2'), tensor(99.9535, device='cuda:2'), tensor(53.9267, device='cuda:2')]
+
+Epoch: [26 | 300] LR: 0.001000
+[0.001, tensor(0.0004, device='cuda:2'), tensor(3.7788, device='cuda:2'), tensor(100., device='cuda:2'), tensor(52.8048, device='cuda:2')]
+
+Epoch: [27 | 300] LR: 0.001000
+[0.001, tensor(0.0001, device='cuda:2'), tensor(3.3410, device='cuda:2'), tensor(100., device='cuda:2'), tensor(52.8796, device='cuda:2')]
+
+Epoch: [28 | 300] LR: 0.001000
+[0.001, tensor(0.0001, device='cuda:2'), tensor(3.0411, device='cuda:2'), tensor(100., device='cuda:2'), tensor(52.7300, device='cuda:2')]
+
+Epoch: [29 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:2'), tensor(2.8812, device='cuda:2'), tensor(100., device='cuda:2'), tensor(52.5804, device='cuda:2')]
+
+Epoch: [30 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:2'), tensor(2.8019, device='cuda:2'), tensor(100., device='cuda:2'), tensor(52.2812, device='cuda:2')]
+
+Epoch: [31 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:2'), tensor(2.7608, device='cuda:2'), tensor(100., device='cuda:2'), tensor(52.3560, device='cuda:2')]
+
+Epoch: [32 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:2'), tensor(2.7486, device='cuda:2'), tensor(100., device='cuda:2'), tensor(52.5056, device='cuda:2')]
+
+Epoch: [33 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:2'), tensor(2.7507, device='cuda:2'), tensor(100., device='cuda:2'), tensor(52.6552, device='cuda:2')]
+
+Epoch: [34 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(2.7662, device='cuda:2'), tensor(100., device='cuda:2'), tensor(52.0568, device='cuda:2')]
+
+Epoch: [35 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(2.7904, device='cuda:2'), tensor(100., device='cuda:2'), tensor(51.9821, device='cuda:2')]
+
+Epoch: [36 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(2.8083, device='cuda:2'), tensor(100., device='cuda:2'), tensor(51.6829, device='cuda:2')]
+
+Epoch: [37 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(2.8438, device='cuda:2'), tensor(100., device='cuda:2'), tensor(51.3089, device='cuda:2')]
+
+Epoch: [38 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(2.8741, device='cuda:2'), tensor(100., device='cuda:2'), tensor(50.7853, device='cuda:2')]
+
+Epoch: [39 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(2.9166, device='cuda:2'), tensor(100., device='cuda:2'), tensor(50.5610, device='cuda:2')]
+
+Epoch: [40 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(2.9542, device='cuda:2'), tensor(100., device='cuda:2'), tensor(50.4862, device='cuda:2')]
+
+Epoch: [41 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.0032, device='cuda:2'), tensor(100., device='cuda:2'), tensor(49.9626, device='cuda:2')]
+
+Epoch: [42 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.0528, device='cuda:2'), tensor(100., device='cuda:2'), tensor(49.5138, device='cuda:2')]
+
+Epoch: [43 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.1009, device='cuda:2'), tensor(100., device='cuda:2'), tensor(48.8407, device='cuda:2')]
+
+Epoch: [44 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.1599, device='cuda:2'), tensor(100., device='cuda:2'), tensor(48.3919, device='cuda:2')]
+
+Epoch: [45 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.2036, device='cuda:2'), tensor(100., device='cuda:2'), tensor(47.8684, device='cuda:2')]
+
+Epoch: [46 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.2600, device='cuda:2'), tensor(100., device='cuda:2'), tensor(47.4196, device='cuda:2')]
+
+Epoch: [47 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.3167, device='cuda:2'), tensor(100., device='cuda:2'), tensor(47.6440, device='cuda:2')]
+
+Epoch: [48 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.3702, device='cuda:2'), tensor(100., device='cuda:2'), tensor(47.5692, device='cuda:2')]
+
+Epoch: [49 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.4234, device='cuda:2'), tensor(100., device='cuda:2'), tensor(47.2700, device='cuda:2')]
+
+Epoch: [50 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.4859, device='cuda:2'), tensor(100., device='cuda:2'), tensor(46.9708, device='cuda:2')]
+
+Epoch: [51 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.5479, device='cuda:2'), tensor(100., device='cuda:2'), tensor(47.0456, device='cuda:2')]
+
+Epoch: [52 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.6126, device='cuda:2'), tensor(100., device='cuda:2'), tensor(46.8212, device='cuda:2')]
+
+Epoch: [53 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.6854, device='cuda:2'), tensor(100., device='cuda:2'), tensor(46.7464, device='cuda:2')]
+
+Epoch: [54 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.7449, device='cuda:2'), tensor(100., device='cuda:2'), tensor(46.5221, device='cuda:2')]
+
+Epoch: [55 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.8137, device='cuda:2'), tensor(100., device='cuda:2'), tensor(46.4473, device='cuda:2')]
+
+Epoch: [56 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.8604, device='cuda:2'), tensor(100., device='cuda:2'), tensor(46.0733, device='cuda:2')]
+
+Epoch: [57 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(3.9471, device='cuda:2'), tensor(100., device='cuda:2'), tensor(45.9985, device='cuda:2')]
+
+Epoch: [58 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(4.0138, device='cuda:2'), tensor(100., device='cuda:2'), tensor(45.4749, device='cuda:2')]
+
+Epoch: [59 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(4.0862, device='cuda:2'), tensor(100., device='cuda:2'), tensor(45.4749, device='cuda:2')]
+
+Epoch: [60 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(4.1590, device='cuda:2'), tensor(100., device='cuda:2'), tensor(45.1758, device='cuda:2')]
+
+Epoch: [61 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(4.2208, device='cuda:2'), tensor(100., device='cuda:2'), tensor(44.9514, device='cuda:2')]
+
+Epoch: [62 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(4.3014, device='cuda:2'), tensor(100., device='cuda:2'), tensor(44.6522, device='cuda:2')]
+
+Epoch: [63 | 300] LR: 0.001000
+[0.001, tensor(0.0003, device='cuda:2'), tensor(4.3591, device='cuda:2'), tensor(100., device='cuda:2'), tensor(44.5774, device='cuda:2')]
+
+Epoch: [64 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:2'), tensor(4.4492, device='cuda:2'), tensor(100., device='cuda:2'), tensor(44.2034, device='cuda:2')]
+
+Epoch: [65 | 300] LR: 0.001000
+[0.001, tensor(0.0002, device='cuda:2'), tensor(4.5288, device='cuda:2'), tensor(100., device='cuda:2'), tensor(44.0539, device='cuda:2')]
+
+Epoch: [66 | 300] LR: 0.001000

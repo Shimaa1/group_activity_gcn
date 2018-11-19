@@ -1,0 +1,8 @@
+Processing |################################| (1337/1337) Data: 0.520s | Batch: 0.664s | Total: 0:14:48 | ETA: 0:00:01 | Loss: 1.0617 | top1:  63.0516 | top5:  96.9334
+ Test Loss:  1.06174827, Test Acc:  63.05
+
+Processing |################################| (2152/2152) Data: 0.074s | Batch: 0.232s | Total: 0:08:20 | ETA: 0:00:01 | Loss: 0.7729 | top1:  71.0502 | top5:  98.7454
+ Test Loss:  0.77293205, Test Acc:  71.05
+
+(1337/1337) Data: 0.314s | Batch: 0.329s | Total: 0:07:20 | ETA: 0:00:01 | Loss: 2.6679 | top1:  41.7352 | top5:  90.3515
+ Test Loss:  2.66789246, Test Acc:  41.74

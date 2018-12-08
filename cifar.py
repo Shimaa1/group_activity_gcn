@@ -26,7 +26,7 @@ from tqdm import tqdm
 
 from dataset_vol_graph import VolleyballDataset
 from utils import Bar, Logger, AverageMeter, accuracy, mkdir_p, savefig
-device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -78,7 +78,7 @@ parser.add_argument('--manualSeed', type=int, help='manual seed')
 parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true',
                     help='evaluate model on validation set')
 #Device options
-parser.add_argument('--gpu-id', default='1', type=str,
+parser.add_argument('--gpu-id', default='0', type=str,
                     help='id(s) for CUDA_VISIBLE_DEVICES')
 
 args = parser.parse_args()

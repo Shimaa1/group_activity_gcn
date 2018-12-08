@@ -25,8 +25,7 @@ from torch.autograd import Variable
 from tqdm import tqdm
 # from torchvision import transforms
 
-#from dataset_vol_graph import VolleyballDataset
-from dataset_vol_graph_mid5 import VolleyballDataset
+from dataset_vol_graph_4 import VolleyballDataset
 from utils import Bar, Logger, AverageMeter, accuracy, mkdir_p, savefig
 from models.cifar.vgg19 import vgg
 
@@ -133,7 +132,7 @@ def main():
         dataloader = datasets.CIFAR10
         num_classes = 10
     elif args.dataset == "volleyball":
-        num_classes = 8
+        num_classes = 4
     else:
         dataloader = datasets.CIFAR100
         num_classes = 100
@@ -216,10 +215,9 @@ def main():
     if args.evaluate:
         print('\nEvaluation only')
         test_loss, test_acc = test(testloader, model, criterion, start_epoch, use_cuda)
-        #print(' Test Loss:  %.8f, Test Acc:  %.2f' % (test_loss, test_acc))
+        print(' Test Loss:  %.8f, Test Acc:  %.2f' % (test_loss, test_acc))
         return
     
-    #best_acc.to(device)
     # Train and val
     for epoch in range(start_epoch, args.epochs):
         adjust_learning_rate(optimizer, epoch)
@@ -234,7 +232,6 @@ def main():
         logger.append([state['lr'], train_loss, test_loss, train_acc, test_acc])
 
         # save model
-        #print('best_acc', best_acc)
         is_best = test_acc > best_acc
         best_acc = max(test_acc, best_acc)
         save_checkpoint({
@@ -278,10 +275,10 @@ def train(trainloader, model, criterion, optimizer, epoch, use_cuda):
         outputs = model(inputs, dists)
         loss = criterion(outputs, targets)
         # measure accuracy and record loss
-        prec1, prec5 = accuracy(outputs.data, targets.data, topk=(1, 5))
+        prec1, _ = accuracy(outputs.data, targets.data, topk=(1,3))
         losses.update(loss.data[0], inputs.size(0))
         top1.update(prec1[0], inputs.size(0))
-        top5.update(prec5[0], inputs.size(0))
+        #top5.update(prec5[0], inputs.size(0))
 
         # compute gradient and do SGD step
         optimizer.zero_grad()
@@ -309,9 +306,6 @@ def train(trainloader, model, criterion, optimizer, epoch, use_cuda):
     return (losses.avg, top1.avg)
 
 def test(testloader, model, criterion, epoch, use_cuda):
-    label_index = {0:'r_set', 1:'r_spike', 2:'r-pass', 3:'r_winpoint', 4:'l_winpoint', \
-        5:'l-pass', 6:'l-spike', 7:'l_set'}
-
     global best_acc
 
     batch_time = AverageMeter()
@@ -339,14 +333,11 @@ def test(testloader, model, criterion, epoch, use_cuda):
 
         loss = criterion(outputs, targets)
 
-        print('targets', label_index[targets.cpu().numpy()[0]])
-        max_value, max_index = torch.max(outputs, 1)
-        print('max_index', label_index[max_index.cpu().numpy()[0]])
         # measure accuracy and record loss
-        prec1, prec5 = accuracy(outputs.data, targets.data, topk=(1, 5))
+        prec1, _ = accuracy(outputs.data, targets.data, topk=(1, 3))
         losses.update(loss.data[0], inputs.size(0))
         top1.update(prec1[0], inputs.size(0))
-        top5.update(prec5[0], inputs.size(0))
+        #top5.update(prec5[0], inputs.size(0))
 
         # measure elapsed time
         batch_time.update(time.time() - end)

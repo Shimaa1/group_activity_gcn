@@ -37,8 +37,8 @@ class Path(object):
     @staticmethod
     def model_dir(net):
         if net == 'vgg19':
-            return '/home/junwen/opengit/player-classification/checkpoints/volleyball/vgg19dropout/model_best.pth.tar'
-            #return '/home/junwen/opengit/player-classification/checkpoints/volleyball/vgg19/model_best.pth.tar
+            return '/home/junwen/opengit/player-classification-video/checkpoints/volleyball/vgg19_64_mid5_preImageNet_flip_drop/model_best.pth.tar'
+            #return '/home/junwen/opengit/player-classification-video/checkpoints/volleyball/vgg19_64_mid5_preImageNet_flip/model_best.pth.tar'
         elif net == 'vgg19bn':
             return '/home/junwen/opengit/player-classification/checkpoints/volleyball/vgg19_bn_dropout/model_best.pth.tar' 
         elif net == 'alexnet':

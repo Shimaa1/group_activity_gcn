@@ -46,10 +46,6 @@ class VolleyballDataset(Dataset):
 
         self.transform2 = transforms
 
-        # self.transform2 = transforms.Compose([
-        #     transforms.ToTensor(),
-        #     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
-        #     ])
         self.fnames, self.labels, self.bboxes = self.make_dataset_sth(video_index, label_index)
 
     def __len__(self):
@@ -67,10 +63,10 @@ class VolleyballDataset(Dataset):
         # buffer = self.normalize(buffer)
         # buffer = self.to_tensor(buffer)
 
-        #return torch.from_numpy(buffer), torch.from_numpy(labels), \
-        #torch.from_numpy(dist)
-        return torch.from_numpy(buffer[::2,:,:,:,:]), torch.from_numpy(labels), \
-        torch.from_numpy(dist[::2,:,:])
+        return torch.from_numpy(buffer), torch.from_numpy(labels), \
+        torch.from_numpy(dist)
+        #return torch.from_numpy(buffer[::2,:,:,:,:]), torch.from_numpy(labels), \
+        #torch.from_numpy(dist[::2,:,:])
 
     def randomflip(self, buffer):
         """Horizontally flip the given image and ground truth randomly with a probability of 0.5."""
@@ -121,15 +117,15 @@ class VolleyballDataset(Dataset):
                 det_lines.append(det_lines[-(i+1)])  #person number 12
 
         frames = sorted([os.path.join(file_dir, img) for img in os.listdir(file_dir)])
-        frame_count = len(frames)
+        frame_count = len(frames)-32
 
         buffer = np.empty((frame_count, 12, 3, 109, 64), np.dtype('float32'))
         dist = np.zeros((frame_count, 2, 2, 12, 12), np.dtype('float64'))
 
-        for i, frame_name in enumerate(frames):
-            idx = i
-        #for idx in range(frame_count):
-        #    i = idx+16
+        #for i, frame_name in enumerate(frames):
+        #    idx = i
+        for idx in range(frame_count):
+            i = idx+16
             frame_name = frames[i]
             for l in np.arange(12):
                 dist[idx][0][0][l][l] = 1/12
@@ -238,30 +234,6 @@ class VolleyballDataset(Dataset):
 
 
         return buffer, dist
-
-    def crop(self, buffer, buffer_bbox, clip_len, crop_size):
-        # randomly select time index for temporal jittering
-        # time_index = np.random.randint(buffer.shape[0] - clip_len)
-        #
-        # # Randomly select start indices in order to crop the video
-        # height_index = np.random.randint(buffer.shape[1] - crop_size)
-        # width_index = np.random.randint(buffer.shape[2] - crop_size)
-
-        time_index = 0
-        # Randomly select start indices in order to crop the video
-        height_index = 0
-        width_index = 0
-        # Crop and jitter the video using indexing. The spatial crop is performed on
-        # the entire array, so each frame is cropped in the same location. The temporal
-        # jitter takes place via the selection of consecutive frames
-
-        buffer = buffer[time_index:time_index + clip_len,
-                 height_index:height_index + crop_size,
-                 width_index:width_index + crop_size, :]
-
-        buffer_bbox = buffer_bbox[time_index:time_index + clip_len, :]
-
-        return buffer, buffer_bbox
 
 
 

@@ -32,8 +32,6 @@ class MLP(nn.Module):
 
     def forward(self, x):
         dout = self.fc1(x)
-        # print("self.fc1", self.fc1(x)[:,:6])
-        # print("dout", dout)
         #
         # assert 1==0
         dout = self.fc2(dout)
@@ -53,8 +51,6 @@ class VGG(nn.Module):
         self.Train = train
         self.features = features
         self.pclassifier = nn.Linear(3072, 9)
-        self.fc6 = nn.Linear(12288, 4096)
-        self.fc7 = nn.Linear(4096, 4096)
         self.conv1da = nn.Conv1d(in_channels=3072, out_channels=512*2, kernel_size=1, \
         padding=0, stride=1, dilation=1, bias=False)
         self.conv1db = nn.Conv1d(in_channels=512, out_channels=256, kernel_size=1, \
@@ -73,7 +69,8 @@ class VGG(nn.Module):
 
     def forward(self, x, dist):
         [N, T, M, C, H, W] = x.shape
-        base_out = self.features(x.view(-1, C, H, W)).view(N*T, M, -1)
+        with torch.no_grad():
+           base_out = self.features(x.view(-1, C, H, W)).view(N*T, M, -1)
         #with torch.no_grad():
         #    p_out = base_out.view(N*T*M, -1)
         #    p_out = self.pclassifier(p_out)
@@ -84,7 +81,12 @@ class VGG(nn.Module):
 
         node1 = self.conv1da(base_out.permute(0,2,1))
         node1 = node1.view(N*T, 2, 512, 12)
-        node1 = torch.einsum('nkcv,nkvw->ncw', (node1, dist.view(N*T, 2, 12, 12).float()))
+        dista = dist[:,:,0,:,:,:]
+        distb = dist[:,:,1,:,:,:]
+        node1a = torch.einsum('nkcv,nkvw->ncw', (node1, dista.view(N*T, 2, 12, 12).float()))
+        node1b = torch.einsum('nkcv,nkvw->ncw', (node1, distb.view(N*T, 2, 12, 12).float()))
+        node1 = node1a+node1b
+        #node1 = torch.einsum('nkcv,nkvw->ncw', (node1, dist.view(N*T, 2, 12, 12).float()))
         # node1 = torch.bmm(dist.view(-1,12,12).float(), node1.permute(0,2,1))
         node1 = F.relu(node1)
 

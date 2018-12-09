@@ -120,7 +120,8 @@ class VolleyballDataset(Dataset):
         frame_count = len(frames)-32
 
         buffer = np.empty((frame_count, 12, 3, 109, 64), np.dtype('float32'))
-        dist = np.zeros((frame_count, 2, 2, 12, 12), np.dtype('float64'))
+        dist = np.zeros((frame_count, 3, 2, 12, 12), np.dtype('float64'))
+        #dist = np.zeros((frame_count, 2, 2, 12, 12), np.dtype('float64'))
 
         #for i, frame_name in enumerate(frames):
         #    idx = i
@@ -140,6 +141,13 @@ class VolleyballDataset(Dataset):
                 dist[idx][1][1][6:l+6] = 1/6
                 dist[idx][1][1][6+l+1:] = 1/6
             
+            for l in np.arange(0,12,3):
+                dist[idx][2][1][l:l+3][l:l+3] = 1/3
+
+            for l in np.arange(12):
+                dist[idx][2][0][l][l] = 1/3
+                dist[idx][2][1][l][l] = 0
+
             frame = cv2.imread(frame_name)
             seq_x = np.zeros((12), dtype="float64")
             for j in range(len(det_lines)):

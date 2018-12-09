@@ -66,6 +66,8 @@ parser.add_argument('-c', '--checkpoint', default='checkpoint', type=str, metava
                     help='path to save checkpoint (default: checkpoint)')
 parser.add_argument('--resume', default='', type=str, metavar='PATH',
                     help='path to latest checkpoint (default: none)')
+parser.add_argument('--model-dir', default='/home/junwen/opengit/player-classification-video/checkpoints/volleyball/vgg19_64_mid5_preImageNet_flip_drop/model_best.pth.tar',
+                    type=str, metavar='PATH', help='path to load player classification(default: 71%)')
 # Architecture
 parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet20',
                     choices=model_names,
@@ -181,7 +183,7 @@ def main():
                     depth=args.depth,
                 )
     else:
-        model = vgg(num_classes=num_classes, net=args.arch)
+        model = vgg(num_classes=num_classes, net=args.arch, model_dir=args.model_dir)
         #model = models.__dict__[args.arch](num_classes=num_classes, pretrain=True)
 
     model.create_architecture()

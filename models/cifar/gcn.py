@@ -7,7 +7,6 @@ import torch.nn.functional as F
 import torch.utils.model_zoo as model_zoo
 import math
 import numpy as np
-from mypath import Path
 from torch.autograd import Variable
 
 class _gcn(nn.Module):
@@ -25,6 +24,7 @@ class _gcn(nn.Module):
         self.pool = nn.AdaptiveAvgPool1d(1)
         self.avg_pool = nn.AdaptiveAvgPool1d(1)
         self.linear = nn.Linear(256, num_classes)
+        self.lstm = nn.LSTM(512, 512, 1)
 
     def forward(self, x, dist):
         [N, T, M, C, H, W] = x.shape
@@ -39,14 +39,17 @@ class _gcn(nn.Module):
         node1b = torch.einsum('nkcv,nkvw->ncw', (node1, distb.view(N*T, 2, 12, 12).float()))
         node1 = node1a+node1b
         node1 = F.relu(node1)
-        
+       
         pooled_feat = self.pool(node1).squeeze(2)
-        pooled_feat = self.gclassifier(pooled_feat)
-        #if self.Train:
-        #   pooled_feat = F.dropout(pooled_feat, p=0.5)
-        group_out = self.avg_pool(pooled_feat.view(N, -1, T))
-        
-        return group_out.squeeze(2)
+        video_feat, _ = self.lstm(pooled_feat.view(N, T, -1))      
+        #video_feat, _ = self.lstm(pooled_feat.view(T, N, -1))      
+        group_cls = self.gclassifier(video_feat[:,-1,:])
+        #group_cls = self.gclassifier(video_feat[-1])
+        #pooled_feat = self.gclassifier(pooled_feat)
+        #group_out = self.avg_pool(pooled_feat.view(N, -1, T))
+  
+        return group_cls
+        #return group_out.squeeze(2)
 
     def _initialize_weights(self):
 

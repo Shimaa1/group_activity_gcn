@@ -8,18 +8,19 @@ import torch.utils.model_zoo as model_zoo
 import math
 import numpy as np
 import torchvision.models as models
-from mypath import Path
+#from mypath import Path
 from torch.autograd import Variable
 
 from models.cifar.gcn import _gcn
 
 class vgg(_gcn):
 
-    def __init__(self, num_classes=1000, net='vgg19'):
+    def __init__(self, num_classes=1000, net='vgg19', model_dir=''):
 
         _gcn.__init__(self, num_classes)
         self.net = net
         self.group_cls = num_classes
+        self.model_dir = model_dir
 
     def _init_modules(self):
 
@@ -37,9 +38,9 @@ class vgg(_gcn):
             #print("Loading pretrained weights from %s" % Path.model_dir(self.net))
             #self._load_pretrained_weights(self.net)
    
-            #if self.pretrained:
-            print("Loading pretrained weights from %s" % Path.model_dir(self.net))
-            state_dict = torch.load(Path.model_dir(self.net))
+            #print("Loading pretrained weights from %s" % Path.model_dir(self.net))
+            state_dict = torch.load(self.model_dir)
+            #state_dict = torch.load(Path.model_dir(self.net))
             
             model.load_state_dict({k:v for k,v in state_dict['state_dict'].items() if k in model.state_dict()})
 

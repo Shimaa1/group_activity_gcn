@@ -11,7 +11,11 @@ from torch.autograd import Variable
 
 class _gcn(nn.Module):
 
-    def __init__(self, num_classes):
+    def __init__(self, num_classes,
+                t_kernel_size=1,
+                t_stride=1,
+                t_padding=0,
+                t_dilation=1):
 
         super(_gcn, self).__init__()
         self.conv1da = nn.Conv1d(in_channels=4096, out_channels=512*2, kernel_size=1, \
@@ -25,19 +29,31 @@ class _gcn(nn.Module):
         self.avg_pool = nn.AdaptiveAvgPool1d(1)
         self.linear = nn.Linear(256, num_classes)
         self.lstm = nn.LSTM(512, 512, 1)
+        #self.conv2da = nn.Conv2d(
+        #               in_channels=4096, 
+        #               out_channels=512*2, 
+        #               kernel_size=(t_kernel_size, 1), 
+        #               padding=(t_padding, 0), 
+        #               stride=(t_stride, 1), 
+        #               dilation=(t_dilation,1), 
+        #               bias=False)
 
     def forward(self, x, dist):
         [N, T, M, C, H, W] = x.shape
         with torch.no_grad():
+            #base_out = self.base_model(x.view(-1, C, H, W)).view(N, T, M, -1)
             base_out = self.base_model(x.view(-1, C, H, W)).view(N*T, M, -1)
         
         node1 = self.conv1da(base_out.permute(0,2,1))
+        #node1 = self.conv1da(base_out.permute(0,2,1))
         node1 = node1.view(N*T, 2, 512, 12)
         dista = dist[:,:,0,:,:,:]
         distb = dist[:,:,1,:,:,:]
+        distc = dist[:,:,2,:,:,:]
         node1a = torch.einsum('nkcv,nkvw->ncw', (node1, dista.view(N*T, 2, 12, 12).float()))
         node1b = torch.einsum('nkcv,nkvw->ncw', (node1, distb.view(N*T, 2, 12, 12).float()))
-        node1 = node1a+node1b
+        node1c = torch.einsum('nkcv,nkvw->ncw', (node1, distc.view(N*T, 2, 12, 12).float()))
+        node1 = node1a+node1b+node1c
         node1 = F.relu(node1)
        
         pooled_feat = self.pool(node1).squeeze(2)

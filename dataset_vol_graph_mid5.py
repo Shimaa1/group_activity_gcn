@@ -129,24 +129,23 @@ class VolleyballDataset(Dataset):
             i = idx+16
             frame_name = frames[i]
             for l in np.arange(12):
-                dist[idx][0][0][l][l] = 1/12
-                dist[idx][0][1][l][:l] = 1/12
-                dist[idx][0][1][l][l+1:] = 1/12
+                dist[idx,0,0,l,l] = 1/12
+                dist[idx,0,1,l,:l] = 1/12
+                dist[idx,0,1,l,l+1:] = 1/12
             
+            for l in range(0,12,6):
+                dist[idx,1,1,l:l+6,l:l+6] = 1/6
+                #dist[idx,1,1][l+1:6] = 1/6
             for l in np.arange(12):
-                dist[idx][1][0][l][l] = 1/6
-            for l in np.arange(6):
-                dist[idx][1][1][:l] = 1/6
-                dist[idx][1][1][l+1:6] = 1/6
-                dist[idx][1][1][6:l+6] = 1/6
-                dist[idx][1][1][6+l+1:] = 1/6
+                dist[idx,1,0,l,l] = 1/6
+                dist[idx,1,1,l,l] = 0
             
-            for l in np.arange(0,12,3):
-                dist[idx][2][1][l:l+3][l:l+3] = 1/3
+            for l in range(0,12,3):
+                dist[idx,2,1,l:l+3,l:l+3] = 1/3
 
             for l in np.arange(12):
-                dist[idx][2][0][l][l] = 1/3
-                dist[idx][2][1][l][l] = 0
+                dist[idx,2,0,l,l] = 1/3
+                dist[idx,2,1,l,l] = 0
 
             frame = cv2.imread(frame_name)
             seq_x = np.zeros((12), dtype="float64")

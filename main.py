@@ -341,9 +341,9 @@ def test(testloader, model, criterion, epoch, use_cuda):
 
         loss = criterion(outputs, targets)
 
-        print('targets', label_index[targets.cpu().numpy()[0]])
+        #print('targets', label_index[targets.cpu().numpy()[0]])
         max_value, max_index = torch.max(outputs, 1)
-        print('max_index', label_index[max_index.cpu().numpy()[0]])
+        #print('max_index', label_index[max_index.cpu().numpy()[0]])
         # measure accuracy and record loss
         prec1, prec5 = accuracy(outputs.data, targets.data, topk=(1, 5))
         losses.update(loss.data[0], inputs.size(0))

@@ -47,6 +47,7 @@ class _gcn(nn.Module):
         with torch.no_grad():
             #base_out = self.base_model(x.view(-1, C, H, W)).view(N, T, M, -1)
             base_out = self.base_model(x.view(-1, C, H, W)).view(N*T, M, -1)
+            player_out = self.player_cls(base_out.view(N*T*M, -1).view(N,T,M,-1))
         
         dista = dist[:,:,2,:,:,:]
         distb = dist[:,:,1,:,:,:]
@@ -77,7 +78,7 @@ class _gcn(nn.Module):
         #pooled_feat = self.gclassifier(pooled_feat)
         #group_out = self.avg_pool(pooled_feat.view(N, -1, T))
   
-        return group_cls
+        return group_cls, player_out
         #return group_out.squeeze(2)
 
     def _initialize_weights(self):

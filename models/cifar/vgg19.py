@@ -51,6 +51,7 @@ class vgg(_gcn):
             self._load_pretrained_weights(self.net)
 
         model.classifier = nn.Sequential(*list(model.classifier._modules.values())[:-1])
+        self.player_cls = nn.Sequential(*list(model.classifier._modules.values())[-2:])
         self.base_model = model
 
 

@@ -268,7 +268,7 @@ def train(trainloader, model, criterion, optimizer, epoch, use_cuda):
     # bar = Bar('Processing', max=len(trainloader))
     # for batch_idx, (inputs, targets) in enumerate(trainloader):
     # for inputs, targets in trainloader:
-    for inputs, targets, dists in trainloader:
+    for _, _, inputs, targets, dists in trainloader:
         # measure data loading time
         inputs = Variable(inputs, requires_grad=True).to(device, dtype=torch.float)
         targets = Variable(targets).to(device)
@@ -277,7 +277,7 @@ def train(trainloader, model, criterion, optimizer, epoch, use_cuda):
         data_time.update(time.time() - end)
 
         # compute output
-        outputs = model(inputs, dists)
+        outputs, _ = model(inputs, dists)
         loss = criterion(outputs, targets)
         # measure accuracy and record loss
         prec1, prec5 = accuracy(outputs.data, targets.data, topk=(1, 5))
@@ -327,7 +327,7 @@ def test(testloader, model, criterion, epoch, use_cuda):
 
     end = time.time()
     bar = Bar('Processing', max=len(testloader))
-    for batch_idx, (inputs, targets, dists) in enumerate(testloader):
+    for batch_idx, (_, _, inputs, targets, dists) in enumerate(testloader):
         # measure data loading
         data_time.update(time.time() - end)
 
@@ -337,13 +337,13 @@ def test(testloader, model, criterion, epoch, use_cuda):
         with torch.no_grad():
         # inputs, targets = torch.autograd.Variable(inputs, volatile=True), torch.autograd.Variable(targets)
         # compute output
-            outputs = model(inputs, dists)
+            outputs,_ = model(inputs, dists)
 
         loss = criterion(outputs, targets)
 
-        print('targets', label_index[targets.cpu().numpy()[0]])
+        #print('targets', label_index[targets.cpu().numpy()[0]])
         max_value, max_index = torch.max(outputs, 1)
-        print('max_index', label_index[max_index.cpu().numpy()[0]])
+        #print('max_index', label_index[max_index.cpu().numpy()[0]])
         # measure accuracy and record loss
         prec1, prec5 = accuracy(outputs.data, targets.data, topk=(1, 5))
         losses.update(loss.data[0], inputs.size(0))

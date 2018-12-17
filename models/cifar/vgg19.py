@@ -35,12 +35,9 @@ class vgg(_gcn):
                 nn.Dropout(),
                 nn.Linear(4096, 9),
             )
-            #print("Loading pretrained weights from %s" % Path.model_dir(self.net))
-            #self._load_pretrained_weights(self.net)
    
             #print("Loading pretrained weights from %s" % Path.model_dir(self.net))
             state_dict = torch.load(self.model_dir)
-            #state_dict = torch.load(Path.model_dir(self.net))
             
             model.load_state_dict({k:v for k,v in state_dict['state_dict'].items() if k in model.state_dict()})
 
@@ -50,8 +47,8 @@ class vgg(_gcn):
             print("Loading pretrained weights from %s" % Path.model_dir(self.net))
             self._load_pretrained_weights(self.net)
 
-        model.classifier = nn.Sequential(*list(model.classifier._modules.values())[:-1])
         self.player_cls = nn.Sequential(*list(model.classifier._modules.values())[-2:])
+        model.classifier = nn.Sequential(*list(model.classifier._modules.values())[:-1])
         self.base_model = model
 
 

@@ -110,6 +110,9 @@ if use_cuda:
 
 best_acc = 0  # best test accuracy
 
+person_label_index = {0:'waiting', 1:'setting', 2:'digging', 3:'falling', 4:'spiking', \
+        5:'blocking', 6:'jumping', 7:'moving', 8:'standing'}
+
 def main():
     global best_acc
     start_epoch = args.start_epoch  # start from epoch 0 or last checkpoint epoch
@@ -172,7 +175,9 @@ def main():
         checkpoint = torch.load(args.resume)
         best_acc = checkpoint['best_acc']
         start_epoch = checkpoint['epoch']
+
         model.load_state_dict(checkpoint['state_dict'])
+
         optimizer.load_state_dict(checkpoint['optimizer'])
         logger = Logger(os.path.join(args.checkpoint, 'log.txt'), title=title, resume=True)
 
@@ -182,17 +187,23 @@ def main():
         #print(' Test Loss:  %.8f, Test Acc:  %.2f' % (test_loss, test_acc))
         return
     
-def visualize_player(name, dists, player_outputs):
-    dists = dists.cpu().numpy()[0]
+def visualize_player(name, bboxs, player_outputs):
     player_outputs = player_outputs.cpu().numpy()[0]
-    frames = os.listdir(name)
-    print(dists.shape)
-    for i in range(len(frames)):
-        img = cv2.imread(frames[i])
-        for j in range(len(dists[0])):
-            img = cv2.rectangle(img, (dists[i,j,0],dists[i,j,1]), (dists[i,j,0]+dists[i,j,2],dists[i,j,1]+dists[i,j,3]), (0,225,0),3)
-            img = cv2.putText(img, player_out, (dists[i,j,0],dists[i,j,1]), font, 2, (0,225,225), 2, cv2.LINE_AA)
-        cv2.imshow(frames(i),img)
+    frames = sorted(os.listdir(name[0]))
+    with open(bboxs[0], 'r') as f:
+        det_lines = f.readlines()
+    det_lines = [item.strip().split('\t') for item in det_lines]
+
+    frame_count = len(frames)-32
+    for idx in range(frame_count):
+        i = idx+16
+        img = cv2.imread(os.path.join(name[0],frames[i]))
+        for j in range(player_outputs.shape[1]):
+            buffer_bbox = [int(x) for x in det_lines[j][i].split(' ')]
+            img = cv2.rectangle(img, (buffer_bbox[0],buffer_bbox[1]), (buffer_bbox[0]+buffer_bbox[2], buffer_bbox[1]+buffer_bbox[3]), (0,225,0),3)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            img = cv2.putText(img, person_label_index[player_outputs[idx][j]], (buffer_bbox[0], buffer_bbox[1]), font, 2, (0,225,225), 2, cv2.LINE_AA)
+        cv2.imshow(frames[i],img)
         cv2.waitKey(0)
     return
 
@@ -214,7 +225,7 @@ def test(testloader, model, criterion, epoch, use_cuda):
 
     end = time.time()
     bar = Bar('Processing', max=len(testloader))
-    for batch_idx, (name, inputs, targets, dists) in enumerate(testloader):
+    for batch_idx, (name, bboxs, inputs, targets, dists) in enumerate(testloader):
         # measure data loading
         data_time.update(time.time() - end)
 
@@ -223,7 +234,8 @@ def test(testloader, model, criterion, epoch, use_cuda):
 
         with torch.no_grad():
             outputs, player_outputs = model(inputs, dists)
-
+            p_max_value, p_max_index = torch.max(player_outputs, 3)
+       
         loss = criterion(outputs, targets)
 
         max_value, max_index = torch.max(outputs, 1)
@@ -231,7 +243,7 @@ def test(testloader, model, criterion, epoch, use_cuda):
             print('name', name)
             print('max_index', label_index[max_index.cpu().numpy()[0]])
             print('targets', label_index[targets.cpu().numpy()[0]])
-            visualize_player(name[0], dists, player_outputs)
+            visualize_player(name, bboxs, p_max_index)
         # measure accuracy and record loss
         prec1, prec5 = accuracy(outputs.data, targets.data, topk=(1, 5))
         losses.update(loss.data[0], inputs.size(0))

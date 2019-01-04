@@ -38,7 +38,6 @@ class vgg(_gcn):
             #print("Loading pretrained weights from %s" % Path.model_dir(self.net))
             #self._load_pretrained_weights(self.net)
    
-            #print("Loading pretrained weights from %s" % Path.model_dir(self.net))
             state_dict = torch.load(self.model_dir)
             #state_dict = torch.load(Path.model_dir(self.net))
             

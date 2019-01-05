@@ -30,6 +30,9 @@ from dataset_vol_graph_mid5 import VolleyballDataset
 from utils import Bar, Logger, AverageMeter, accuracy, mkdir_p, savefig
 from models.cifar.vgg19 import vgg
 
+import train_test_model as T
+import models.cifar.gan as GAN
+import util
 #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 model_names = sorted(name for name in models.__dict__
@@ -141,16 +144,28 @@ def main():
         num_classes = 100
 
 
-    # trainset = dataloader(root='./data', train=True, download=False, transform=transform_train)
-    #train_dataset = VolleyballDataset()
-    # trainloader = DataLoader(trainset, batch_size=args.train_batch, shuffle=False, num_workers=args.workers)
     trainloader = DataLoader(VolleyballDataset(split='train', transforms=transform_train), \
     batch_size=args.train_batch, shuffle=True, num_workers=args.workers)
 
-    # testset = dataloader(root='./data', train=False, download=False, transform=transform_test)
     testloader = DataLoader(VolleyballDataset(split='test', transforms=transform_test), \
     batch_size=args.test_batch, shuffle=False, num_workers=args.workers)
-    # testloader = DataLoader(testset, batch_size=args.test_batch, shuffle=False, num_workers=args.workers)
+
+    x_dim = 512
+    h_dim = 512
+    z_dim = 512
+    E_model = GAN.Encoder(x_dim, h_dim, z_dim)
+    G1 = GAN.Decoder1(z_dim, h_dim, x_dim)
+    G2 = GAN.Decoder2(z_dim, h_dim, x_dim)
+    D_model = GAN.Discriminator(x_dim, h_dim, num_classes)
+    E_solver = optim.Adam(E_model.parameters(), lr=state['lr'])
+    G1_solver = optim.Adam(G1.parameters(), lr=state['lr'])
+    G2_solver = optim.Adam(G2.parameters(), lr=state['lr'])
+    D_solver = optim.Adam(D_model.parameters(), lr=state['lr'])
+
+    E_model.to(device)
+    G1.to(device)
+    G2.to(device)
+    D_model.to(device)
 
     # Model
     print("==> creating model '{}'".format(args.arch))
@@ -187,14 +202,24 @@ def main():
         #model = models.__dict__[args.arch](num_classes=num_classes, pretrain=True)
 
     model.create_architecture()
-
     model.to(device)
-    #model = torch.nn.DataParallel(model).cuda()
     cudnn.benchmark = True
     print('    Total params: %.2fM' % (sum(p.numel() for p in model.parameters())/1000000.0))
 
+    train_file = open("train_out.txt", "w")
+    test_file = open("test_out.txt", "w")
+
+    util.print_model(E_model, G1, G2, D_model)
+
+    # adjust learning rate
+    scheduler_E = optim.lr_scheduler.StepLR(E_solver, 100, 0.1)
+    scheduler_G1 = optim.lr_scheduler.StepLR(G1_solver, 100, 0.1)
+    scheduler_G2 = optim.lr_scheduler.StepLR(G2_solver, 100, 0.1)
+    scheduler_D = optim.lr_scheduler.StepLR(D_solver, 100, 0.1)
+
+
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
+    #optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
 
     # Resume
     title = 'volleyball-' + args.arch
@@ -221,22 +246,30 @@ def main():
         #print(' Test Loss:  %.8f, Test Acc:  %.2f' % (test_loss, test_acc))
         return
     
+    assert 1==0 
     #best_acc.to(device)
     # Train and val
     for epoch in range(start_epoch, args.epochs):
-        adjust_learning_rate(optimizer, epoch)
+        scheduler_E.step()
+        scheduler_G1.step()
+        scheduler_G2.step()
+        scheduler_D.step()
+
+
+        #adjust_learning_rate(optimizer, epoch)
 
         print('\nEpoch: [%d | %d] LR: %f' % (epoch + 1, args.epochs, state['lr']))
 
-        train_loss, train_acc = train(trainloader, model, criterion, optimizer, epoch, use_cuda)
-        test_loss, test_acc = test(testloader, model, criterion, epoch, use_cuda)
+        #train_loss, train_acc = train(trainloader, model, criterion, optimizer, epoch, use_cuda)
+        #test_loss, test_acc = test(testloader, model, criterion, epoch, use_cuda)
+        T.train(epoch, device, trainloader, E_model, E_solver, G1, G1_solver, G2, G2_solver, D_model, D_solver, train_file, num_class)
+        test_acc = T.test(epoch, device, testloader, E_model, G1, G2, D_model, test_file, num_class)
 
         # append logger file
-        print([state['lr'], train_loss, test_loss, train_acc, test_acc])
-        logger.append([state['lr'], train_loss, test_loss, train_acc, test_acc])
+        #print([state['lr'], train_loss, test_loss, train_acc, test_acc])
+        #logger.append([state['lr'], train_loss, test_loss, train_acc, test_acc])
 
         # save model
-        #print('best_acc', best_acc)
         is_best = test_acc > best_acc
         best_acc = max(test_acc, best_acc)
         save_checkpoint({

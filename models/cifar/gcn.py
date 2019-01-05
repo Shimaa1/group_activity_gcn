@@ -31,7 +31,6 @@ class _gcn(nn.Module):
         self.pool = nn.AdaptiveAvgPool1d(1)
         self.avg_pool = nn.AdaptiveAvgPool1d(1)
         self.linear = nn.Linear(256, num_classes)
-        #self.lstm = nn.LSTM(512, 512, 1)
         self.lstm = nn.LSTM(128, 128, 1)
         #self.conv2da = nn.Conv2d(
         #               in_channels=4096, 
@@ -45,7 +44,6 @@ class _gcn(nn.Module):
     def forward(self, x, dist):
         [N, T, M, C, H, W] = x.shape
         with torch.no_grad():
-            #base_out = self.base_model(x.view(-1, C, H, W)).view(N, T, M, -1)
             base_out = self.base_model(x.view(-1, C, H, W)).view(N*T, M, -1)
         
         dista = dist[:,:,2,:,:,:]
@@ -78,7 +76,6 @@ class _gcn(nn.Module):
         #group_out = self.avg_pool(pooled_feat.view(N, -1, T))
   
         return group_cls
-        #return group_out.squeeze(2)
 
     def _initialize_weights(self):
 

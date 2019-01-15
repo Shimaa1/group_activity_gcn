@@ -150,9 +150,9 @@ def main():
     testloader = DataLoader(VolleyballDataset(split='test', transforms=transform_test), \
     batch_size=args.test_batch, shuffle=False, num_workers=args.workers)
 
-    x_dim = 512
-    h_dim = 512
-    z_dim = 512
+    x_dim = 256
+    h_dim = 64
+    z_dim = 64
     E_model = GAN.Encoder(x_dim, h_dim, z_dim)
     G1 = GAN.Decoder1(z_dim, h_dim, x_dim)
     G2 = GAN.Decoder2(z_dim, h_dim, x_dim)
@@ -232,7 +232,7 @@ def main():
         best_acc = checkpoint['best_acc']
         start_epoch = checkpoint['epoch']
         model.load_state_dict(checkpoint['state_dict'])
-        optimizer.load_state_dict(checkpoint['optimizer'])
+        #optimizer.load_state_dict(checkpoint['optimizer'])
         logger = Logger(os.path.join(args.checkpoint, 'log.txt'), title=title, resume=True)
     else:
         logger = Logger(os.path.join(args.checkpoint, 'log.txt'), title=title)
@@ -246,7 +246,6 @@ def main():
         #print(' Test Loss:  %.8f, Test Acc:  %.2f' % (test_loss, test_acc))
         return
     
-    assert 1==0 
     #best_acc.to(device)
     # Train and val
     for epoch in range(start_epoch, args.epochs):
@@ -262,8 +261,8 @@ def main():
 
         #train_loss, train_acc = train(trainloader, model, criterion, optimizer, epoch, use_cuda)
         #test_loss, test_acc = test(testloader, model, criterion, epoch, use_cuda)
-        T.train(epoch, device, trainloader, E_model, E_solver, G1, G1_solver, G2, G2_solver, D_model, D_solver, train_file, num_class)
-        test_acc = T.test(epoch, device, testloader, E_model, G1, G2, D_model, test_file, num_class)
+        T.train(epoch, device, trainloader, model, E_model, E_solver, G1, G1_solver, G2, G2_solver, D_model, D_solver, train_file, num_classes)
+        test_acc = T.test(epoch, device, testloader, model, E_model, G1, G2, D_model, test_file, num_classes)
 
         # append logger file
         #print([state['lr'], train_loss, test_loss, train_acc, test_acc])
@@ -301,7 +300,7 @@ def train(trainloader, model, criterion, optimizer, epoch, use_cuda):
     # bar = Bar('Processing', max=len(trainloader))
     # for batch_idx, (inputs, targets) in enumerate(trainloader):
     # for inputs, targets in trainloader:
-    for inputs, targets, dists in trainloader:
+    for _, _, inputs, targets, dists in trainloader:
         # measure data loading time
         inputs = Variable(inputs, requires_grad=True).to(device, dtype=torch.float)
         targets = Variable(targets).to(device)
@@ -310,7 +309,7 @@ def train(trainloader, model, criterion, optimizer, epoch, use_cuda):
         data_time.update(time.time() - end)
 
         # compute output
-        outputs = model(inputs, dists)
+        outputs, _ = model(inputs, dists)
         loss = criterion(outputs, targets)
         # measure accuracy and record loss
         prec1, prec5 = accuracy(outputs.data, targets.data, topk=(1, 5))
@@ -360,7 +359,7 @@ def test(testloader, model, criterion, epoch, use_cuda):
 
     end = time.time()
     bar = Bar('Processing', max=len(testloader))
-    for batch_idx, (inputs, targets, dists) in enumerate(testloader):
+    for batch_idx, (_, _, inputs, targets, dists) in enumerate(testloader):
         # measure data loading
         data_time.update(time.time() - end)
 
@@ -370,13 +369,13 @@ def test(testloader, model, criterion, epoch, use_cuda):
         with torch.no_grad():
         # inputs, targets = torch.autograd.Variable(inputs, volatile=True), torch.autograd.Variable(targets)
         # compute output
-            outputs = model(inputs, dists)
+            outputs,_ = model(inputs, dists)
 
         loss = criterion(outputs, targets)
 
-        print('targets', label_index[targets.cpu().numpy()[0]])
+        #print('targets', label_index[targets.cpu().numpy()[0]])
         max_value, max_index = torch.max(outputs, 1)
-        print('max_index', label_index[max_index.cpu().numpy()[0]])
+        #print('max_index', label_index[max_index.cpu().numpy()[0]])
         # measure accuracy and record loss
         prec1, prec5 = accuracy(outputs.data, targets.data, topk=(1, 5))
         losses.update(loss.data[0], inputs.size(0))

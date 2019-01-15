@@ -40,15 +40,22 @@ def CombineSample2(data, label, num_class):
 
 # return a partial video batch
 def sample_data(data_batched, length_batched, ratio):
-    if ratio < 1.0:
-        length_batched = torch.round(length_batched.type(torch.FloatTensor) * ratio)
-        max_len = int(torch.max(length_batched))
+    #L*B*D
+    
+    length_batched = int(round(length_batched * ratio))
+    data_batched = data_batched[:length_batched,:,:]
 
-        for i in range(data_batched.size(1)):
-            index = int(length_batched[i])
-            data_batched[index:,i,:] = 0
+    #if ratio < 1.0:
+    #    #length_batched = torch.round(length_batched.type(torch.FloatTensor) * ratio)
+    #    #max_len = int(torch.max(length_batched))
+    #    length_batched = round(length_batched * ratio)
+    #    max_len = int(length_batched)
 
-        data_batched = data_batched[0:max_len, :, :]
+    #    for i in range(data_batched.size(1)):	
+    #        index = int(length_batched[i])
+    #        data_batched[index:,i,:] = 0
+
+    #    data_batched = data_batched[0:max_len, :, :]
 
     return data_batched, length_batched
 

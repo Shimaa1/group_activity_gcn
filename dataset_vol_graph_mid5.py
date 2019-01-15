@@ -33,6 +33,7 @@ class VolleyballDataset(Dataset):
 
         dic ={'train': '1 3 6 7 10 13 15 16 18 22 23 31 32 36 38 39 40 41 42 48 50 52 53 54', \
                 'val': '0 2 8 12 17 19 24 26 27 28 30 33 46 49 51', \
+                #'test': '4'}
                 'test': '4 5 9 11 14 20 21 25 29 34 35 37 43 44 45 47'}
 
         label_index = {'r_set': 0, 'r_spike': 1, 'r-pass': 2, 'r_winpoint': 3, 'l_winpoint': 4, \
@@ -57,11 +58,11 @@ class VolleyballDataset(Dataset):
         buffer, dist= self.load_frames(self.fnames[index], self.bboxes[index])
         # buffer = self.transform2(buffer)
 
-        # if self.split == 'test':
+        #if self.split == 'test':
         #     # Perform data augmentation
         #     buffer = self.randomflip(buffer)
         # buffer = self.normalize(buffer)
-        # buffer = self.to_tensor(buffer)
+        #buffer = self.to_tensor(buffer)
 
         return torch.from_numpy(buffer), torch.from_numpy(labels), \
         torch.from_numpy(dist)

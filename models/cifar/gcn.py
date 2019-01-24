@@ -75,7 +75,8 @@ class _gcn(nn.Module):
         
         group_cls = self.gclassifier(video_feat[:,-1,:])
   
-        return group_cls, pooled_feat.view(N, T, -1)
+        return group_cls, video_feat
+        #return group_cls, pooled_feat.view(N, T, -1)
 
     def _initialize_weights(self):
 

@@ -42,8 +42,8 @@ def CombineSample2(data, label, num_class):
 def sample_data(data_batched, length_batched, ratio):
     #B*L*D
     length_batched = int(round(length_batched * ratio))
-    data_batched = data_batched[:,:length_batched,:]
-    #data_batched = data_batched[:length_batched,:,:]
+    data_batched = data_batched[:,length_batched-1,:]
+    #data_batched = data_batched[:,:length_batched,:]
 
     #if ratio < 1.0:
     #    #length_batched = torch.round(length_batched.type(torch.FloatTensor) * ratio)

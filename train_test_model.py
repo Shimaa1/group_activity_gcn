@@ -48,9 +48,10 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
 
         # batch normalization
         max_len = length_full
-        X_full = data_batched.permute(0, 2, 1) #B*L*D -> B*D*L
-        X_full = F.avg_pool1d(X_full, max_len, stride=1)
-        X_full = torch.squeeze(X_full, dim=2)
+        X_full = data_batched[:,-1,:]
+        #X_full = data_batched.permute(0, 2, 1) #B*L*D -> B*D*L
+        #X_full = F.avg_pool1d(X_full, max_len, stride=1)
+        #X_full = torch.squeeze(X_full, dim=2)
         #X_full = util.norm_data(X_full)
 
         # sample partial data
@@ -60,9 +61,9 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
             #max_len_partial = int(max(length_partial))
 
             # temporal pooling
-            X_partial = X_partial.permute(0, 2, 1)
-            X_partial = F.avg_pool1d(X_partial, max_len_partial, stride=1)
-            X_partial = torch.squeeze(X_partial, dim=2)
+            #X_partial = X_partial.permute(0, 2, 1)
+            #X_partial = F.avg_pool1d(X_partial, max_len_partial, stride=1)
+            #X_partial = torch.squeeze(X_partial, dim=2)
             #X_partial = util.norm_data(X_partial)
             # BEGIN optimize E and G1
             z_sample = E_model(X_partial)
@@ -188,9 +189,9 @@ def test(epoch, device, test_data_loader, model, E_model, G1_model, G2_model, D_
                 max_len_partial = length_partial
 
                 # temporal pooling
-                X_partial = X_partial.permute(0, 2, 1)
-                X_partial = F.avg_pool1d(X_partial, max_len_partial, stride=1)
-                X_partial = torch.squeeze(X_partial, dim=2)
+                #X_partial = X_partial.permute(0, 2, 1)
+                #X_partial = F.avg_pool1d(X_partial, max_len_partial, stride=1)
+                #X_partial = torch.squeeze(X_partial, dim=2)
                 #X_partial = util.norm_data(X_partial)
             
                 # forward
@@ -203,8 +204,8 @@ def test(epoch, device, test_data_loader, model, E_model, G1_model, G2_model, D_
                 # forward again
                 D_real_score2 = D_model(X_partial, progress_label)
                 output2 = D_real_score2[:, :num_class]
-                outputs = output2 #torch.mean(output1, output2)
-                #outputs = (output1 + output2) / 2 #torch.mean(output1, output2)
+                #outputs = output2 #torch.mean(output1, output2)
+                outputs = (output1 + output2) / 2 #torch.mean(output1, output2)
  
                 loss = criterion(outputs, label_batched)
                 max_value, max_index = torch.max(outputs.data, 1)

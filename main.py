@@ -12,6 +12,7 @@ import random
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import torch.nn.parallel
 import torch.backends.cudnn as cudnn
 import torch.optim as optim
@@ -19,21 +20,20 @@ import torch.utils.data as data
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
-#import models.cifar as models
 import torchvision.models as models
 from torch.autograd import Variable
 from tqdm import tqdm
-# from torchvision import transforms
 
-#from dataset_vol_graph import VolleyballDataset
-from dataset_vol_graph_mid5 import VolleyballDataset
+from dataset_vol_graph_early import VolleyballDataset
+#from dataset_vol_graph_mid5 import VolleyballDataset
 from utils import Bar, Logger, AverageMeter, accuracy, mkdir_p, savefig
 from models.cifar.vgg19 import vgg
 
 import train_test_model as T
 import models.cifar.gan as GAN
+import video_dataset_processing as vdpro
+import time
 import util
-#device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -69,8 +69,8 @@ parser.add_argument('-c', '--checkpoint', default='checkpoint', type=str, metava
                     help='path to save checkpoint (default: checkpoint)')
 parser.add_argument('--resume', default='', type=str, metavar='PATH',
                     help='path to latest checkpoint (default: none)')
-parser.add_argument('--model-dir', default='/home/junwen/opengit/player-classification-video/checkpoints/volleyball/vgg19_64_mid5_preImageNet_flip_drop/model_best.pth.tar',
-                    type=str, metavar='PATH', help='path to load player classification(default: 71%)')
+parser.add_argument('--group-pretrain', default='/mnt/data8tb/junwen/checkpoints/group_gcn/volleyball/vgg19_64_4096fixed_gcn2layer_lr0.01_pre71_mid5_lstm2/model_best.pth.tar', type=str, metavar='PATH', help='path to load group rec(default: 79%)')
+parser.add_argument('--model-dir', default='/home/junwen/opengit/player-classification-video/checkpoints/volleyball/vgg19_64_mid5_preImageNet_flip_drop/model_best.pth.tar', type=str, metavar='PATH', help='path to load player classification(default: 71%)')
 # Architecture
 parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet20',
                     choices=model_names,
@@ -199,10 +199,16 @@ def main():
                 )
     else:
         model = vgg(num_classes=num_classes, net=args.arch, model_dir=args.model_dir)
-        #model = models.__dict__[args.arch](num_classes=num_classes, pretrain=True)
 
     model.create_architecture()
     model.to(device)
+
+    #model resume
+    model.load_state_dict(torch.load(args.group_pretrain)['state_dict'])
+
+    #for k,v in model.state_dict().items():
+    #    print(k)
+
     cudnn.benchmark = True
     print('    Total params: %.2fM' % (sum(p.numel() for p in model.parameters())/1000000.0))
 
@@ -231,22 +237,24 @@ def main():
         checkpoint = torch.load(args.resume)
         best_acc = checkpoint['best_acc']
         start_epoch = checkpoint['epoch']
-        model.load_state_dict(checkpoint['state_dict'])
+        E_model.load_state_dict(checkpoint['E_state_dict'])
+        G2.load_state_dict(checkpoint['G1_state_dict'])
+        G1.load_state_dict(checkpoint['G2_state_dict'])
+        D_model.load_state_dict(checkpoint['D_state_dict'])
         #optimizer.load_state_dict(checkpoint['optimizer'])
         logger = Logger(os.path.join(args.checkpoint, 'log.txt'), title=title, resume=True)
     else:
         logger = Logger(os.path.join(args.checkpoint, 'log.txt'), title=title)
         logger.set_names(['Learning Rate', 'Train Loss', 'Valid Loss', 'Train Acc.', 'Valid Acc.'])
 
-    #best_acc.to(device)
-
+    epoch = 1
     if args.evaluate:
         print('\nEvaluation only')
-        test_loss, test_acc = test(testloader, model, criterion, start_epoch, use_cuda)
-        #print(' Test Loss:  %.8f, Test Acc:  %.2f' % (test_loss, test_acc))
+        test_loss, level_accuracy = T.test(epoch, device, testloader, model, E_model, G1, G2, D_model, test_file, num_classes)
+        test_acc = torch.mean(level_accuracy)
+        print(' Test Loss:  %.8f, Test Acc:  %.2f' % (test_loss, test_acc))
         return
     
-    #best_acc.to(device)
     # Train and val
     for epoch in range(start_epoch, args.epochs):
         scheduler_E.step()
@@ -254,29 +262,28 @@ def main():
         scheduler_G2.step()
         scheduler_D.step()
 
-
         #adjust_learning_rate(optimizer, epoch)
-
         print('\nEpoch: [%d | %d] LR: %f' % (epoch + 1, args.epochs, state['lr']))
 
-        #train_loss, train_acc = train(trainloader, model, criterion, optimizer, epoch, use_cuda)
-        #test_loss, test_acc = test(testloader, model, criterion, epoch, use_cuda)
-        T.train(epoch, device, trainloader, model, E_model, E_solver, G1, G1_solver, G2, G2_solver, D_model, D_solver, train_file, num_classes)
-        test_acc = T.test(epoch, device, testloader, model, E_model, G1, G2, D_model, test_file, num_classes)
-
-        # append logger file
-        #print([state['lr'], train_loss, test_loss, train_acc, test_acc])
-        #logger.append([state['lr'], train_loss, test_loss, train_acc, test_acc])
+        train_loss = T.train(epoch, device, trainloader, model, E_model, E_solver, G1, G1_solver, G2, G2_solver, D_model, D_solver, train_file, num_classes)
+        test_loss, level_accuracy = T.test(epoch, device, testloader, model, E_model, G1, G2, D_model, test_file, num_classes)
 
         # save model
+        test_acc = torch.mean(level_accuracy)
+        #logger.append([state['lr'], test_acc])
+        print(train_loss, test_loss, test_acc)
+
         is_best = test_acc > best_acc
         best_acc = max(test_acc, best_acc)
         save_checkpoint({
                 'epoch': epoch + 1,
-                'state_dict': model.state_dict(),
+                'E_state_dict': E_model.state_dict(),
+                'G1_state_dict': G1.state_dict(),
+                'G2_state_dict': G2.state_dict(),
+                'D_state_dict': D_model.state_dict(),
                 'acc': test_acc,
                 'best_acc': best_acc,
-                'optimizer' : optimizer.state_dict(),
+                #'optimizer' : optimizer.state_dict(),
             }, is_best, checkpoint=args.checkpoint)
 
     logger.close()
@@ -286,121 +293,7 @@ def main():
     print('Best acc:')
     print(best_acc)
 
-def train(trainloader, model, criterion, optimizer, epoch, use_cuda):
-    # switch to train mode
-    model.train()
 
-    batch_time = AverageMeter()
-    data_time = AverageMeter()
-    losses = AverageMeter()
-    top1 = AverageMeter()
-    top5 = AverageMeter()
-    end = time.time()
-
-    # bar = Bar('Processing', max=len(trainloader))
-    # for batch_idx, (inputs, targets) in enumerate(trainloader):
-    # for inputs, targets in trainloader:
-    for _, _, inputs, targets, dists in trainloader:
-        # measure data loading time
-        inputs = Variable(inputs, requires_grad=True).to(device, dtype=torch.float)
-        targets = Variable(targets).to(device)
-        dists = Variable(dists, requires_grad = True).to(device)
-
-        data_time.update(time.time() - end)
-
-        # compute output
-        outputs, _ = model(inputs, dists)
-        loss = criterion(outputs, targets)
-        # measure accuracy and record loss
-        prec1, prec5 = accuracy(outputs.data, targets.data, topk=(1, 5))
-        losses.update(loss.data[0], inputs.size(0))
-        top1.update(prec1[0], inputs.size(0))
-        top5.update(prec5[0], inputs.size(0))
-
-        # compute gradient and do SGD step
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-
-        # measure elapsed time
-        batch_time.update(time.time() - end)
-        end = time.time()
-
-        # plot progress
-        # bar.suffix  = '({batch}/{size}) Data: {data:.3f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:} | Loss: {loss:.4f} | top1: {top1: .4f} | top5: {top5: .4f}'.format(
-        #             batch=batch_idx + 1,
-        #             size=len(trainloader),
-        #             data=data_time.avg,
-        #             bt=batch_time.avg,
-        #             total=bar.elapsed_td,
-        #             eta=bar.eta_td,
-        #             loss=losses.avg,
-        #             top1=top1.avg,
-        #             top5=top5.avg,
-        #             )
-    #     bar.next()
-    # bar.finish()
-    return (losses.avg, top1.avg)
-
-def test(testloader, model, criterion, epoch, use_cuda):
-    label_index = {0:'r_set', 1:'r_spike', 2:'r-pass', 3:'r_winpoint', 4:'l_winpoint', \
-        5:'l-pass', 6:'l-spike', 7:'l_set'}
-
-    global best_acc
-
-    batch_time = AverageMeter()
-    data_time = AverageMeter()
-    losses = AverageMeter()
-    top1 = AverageMeter()
-    top5 = AverageMeter()
-
-    # switch to evaluate mode
-    model.eval()
-
-    end = time.time()
-    bar = Bar('Processing', max=len(testloader))
-    for batch_idx, (_, _, inputs, targets, dists) in enumerate(testloader):
-        # measure data loading
-        data_time.update(time.time() - end)
-
-        if use_cuda:
-            inputs, targets, dists = inputs.to(device), targets.to(device), dists.to(device)
-
-        with torch.no_grad():
-        # inputs, targets = torch.autograd.Variable(inputs, volatile=True), torch.autograd.Variable(targets)
-        # compute output
-            outputs,_ = model(inputs, dists)
-
-        loss = criterion(outputs, targets)
-
-        #print('targets', label_index[targets.cpu().numpy()[0]])
-        max_value, max_index = torch.max(outputs, 1)
-        #print('max_index', label_index[max_index.cpu().numpy()[0]])
-        # measure accuracy and record loss
-        prec1, prec5 = accuracy(outputs.data, targets.data, topk=(1, 5))
-        losses.update(loss.data[0], inputs.size(0))
-        top1.update(prec1[0], inputs.size(0))
-        top5.update(prec5[0], inputs.size(0))
-
-        # measure elapsed time
-        batch_time.update(time.time() - end)
-        end = time.time()
-
-        # plot progress
-        bar.suffix  = '({batch}/{size}) Data: {data:.3f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:} | Loss: {loss:.4f} | top1: {top1: .4f} | top5: {top5: .4f}'.format(
-                    batch=batch_idx + 1,
-                    size=len(testloader),
-                    data=data_time.avg,
-                    bt=batch_time.avg,
-                    total=bar.elapsed_td,
-                    eta=bar.eta_td,
-                    loss=losses.avg,
-                    top1=top1.avg,
-                    top5=top5.avg,
-                    )
-        bar.next()
-    bar.finish()
-    return (losses.avg, top1.avg)
 
 def save_checkpoint(state, is_best, checkpoint='checkpoint', filename='checkpoint.pth.tar'):
     filepath = os.path.join(checkpoint, filename)

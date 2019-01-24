@@ -76,8 +76,6 @@ class _gcn(nn.Module):
         group_cls = self.gclassifier(video_feat[:,-1,:])
   
         return group_cls, pooled_feat.view(N, T, -1)
-        #return group_cls, player_out
-        #return group_out.squeeze(2)
 
     def _initialize_weights(self):
 

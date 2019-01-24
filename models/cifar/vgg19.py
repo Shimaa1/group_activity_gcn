@@ -37,7 +37,7 @@ class vgg(_gcn):
             )
    
             state_dict = torch.load(self.model_dir)
-            
+             
             model.load_state_dict({k:v for k,v in state_dict['state_dict'].items() if k in model.state_dict()})
 
 

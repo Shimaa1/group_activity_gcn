@@ -47,6 +47,11 @@ def print_model(E_model, G1, G2, D_model):
             print(type(param.data), param.size(), file=model_file)
 
 def norm_data(data):
-    data = (data - data.min().data[0]) / (data.max().data[0] - data.min().data[0])
-    #data = 2 * data - 1
-    return data
+     data_mean = torch.mean(data, dim=0)
+     data_std = torch.std(data, dim=0)
+     return (data-data_mean)/data_std
+
+#def norm_data(data):
+#    data = (data - data.min().data[0]) / (data.max().data[0] - data.min().data[0])
+#    #data = 2 * data - 1
+#    return data

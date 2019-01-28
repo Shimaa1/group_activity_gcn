@@ -241,6 +241,7 @@ def main():
         G2.load_state_dict(checkpoint['G1_state_dict'])
         G1.load_state_dict(checkpoint['G2_state_dict'])
         D_model.load_state_dict(checkpoint['D_state_dict'])
+        model.load_state_dict(checkpoint['state_dict'])
         #optimizer.load_state_dict(checkpoint['optimizer'])
         logger = Logger(os.path.join(args.checkpoint, 'log.txt'), title=title, resume=True)
     else:
@@ -277,6 +278,7 @@ def main():
         best_acc = max(test_acc, best_acc)
         save_checkpoint({
                 'epoch': epoch + 1,
+                'state_dict': model.state_dict(),
                 'E_state_dict': E_model.state_dict(),
                 'G1_state_dict': G1.state_dict(),
                 'G2_state_dict': G2.state_dict(),

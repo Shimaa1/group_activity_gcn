@@ -34,15 +34,6 @@ class _gcn(nn.Module):
         #self.lstm = nn.LSTM(128, 128, 1)
         #self.lstm = nn.LSTM(512, 512, 1)
         self.lstm = nn.LSTM(256, 256, 1)
-        #self.lstm = nn.LSTM(128, 128, 1)
-        #self.conv2da = nn.Conv2d(
-        #               in_channels=4096, 
-        #               out_channels=512*2, 
-        #               kernel_size=(t_kernel_size, 1), 
-        #               padding=(t_padding, 0), 
-        #               stride=(t_stride, 1), 
-        #               dilation=(t_dilation,1), 
-        #               bias=False)
 
     def forward(self, x, dist):
         [N, T, M, C, H, W] = x.shape

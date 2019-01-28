@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 import video_dataset_processing as vdpro
+from mypath import Path
 
 class Encoder(nn.Module):
 	def __init__(self, x_dim, h_dim, z_dim):
@@ -76,7 +77,9 @@ class Discriminator(nn.Module):
 		self.h_dim = h_dim
 		self.num_class = num_class
 
+		#self.fc1 = nn.Linear(x_dim, num_class)
 		self.fc1 = nn.Linear(x_dim+10, num_class+1)
+		#self._load_pretrained_weights()
 		#self.fc2 = nn.Linear(h_dim, num_class+1)
 		#self.relu = nn.LeakyReLU()
 		#self.norm = nn.BatchNorm1d(x_dim)
@@ -85,8 +88,19 @@ class Discriminator(nn.Module):
 	#	return self.fc2(h)
 
 	def forward(self, x, l):
-		#x = self.norm(x)
 		x = vdpro.CombineSample(x, l, 10)
-		#h = self.relu(self.fc1(x))
 		return self.fc1(x)
 
+	def _load_pretrained_weights(self):
+		corresp_name = {
+				"gclassifier.weights": "fc1.weight",
+				"gclassifier.bias": "fc1.bias",                               
+				}
+		p_dict = torch.load(Path.group_dir('vgg19'))['state_dict']
+		s_dict = self.state_dict()
+		for item in s_dict:
+			print('sdict', item)
+		for name in p_dict:
+			print('pdict', name)
+		#assert 1==0
+		self.load_state_dict({corresp_name[k]:v for k,v in p_dict.items() if k in corresp_name})

@@ -35,10 +35,14 @@ class Path(object):
             raise NotImplementedError
 
     @staticmethod
+    def group_dir(net):
+        if net == 'vgg19':
+            return '/mnt/data8tb/junwen/checkpoints/group_gcn/volleyball/vgg19_64_4096fixed_gcn2layer_lr0.01_pre71_mid5_lstm2/model_best.pth.tar'
+ 
+    @staticmethod
     def model_dir(net):
         if net == 'vgg19':
             return '/home/junwen/opengit/player-classification-video/checkpoints/volleyball/vgg19_64_mid5_preImageNet_flip_drop/model_best.pth.tar'
-            #return '/home/junwen/opengit/player-classification-video/checkpoints/volleyball/vgg19_64_mid5_preImageNet_flip/model_best.pth.tar'
         elif net == 'vgg19bn':
             return '/home/junwen/opengit/player-classification/checkpoints/volleyball/vgg19_bn_dropout/model_best.pth.tar' 
         elif net == 'alexnet':

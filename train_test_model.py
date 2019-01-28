@@ -36,14 +36,16 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
 
         data_time.update(time.time() - end)
 
-        with torch.no_grad():
-            _, data_batched = model(inputs, dists)
+        #with torch.no_grad():
+        _, data_batched = model(inputs, dists)
 
         length_full = data_batched.size(1)
         #data_batched = data_batched.permute(1,0,2)  # B*L*D -> L*B*D
 
         # labels for GAN
+        #ones_label = Variable(torch.ones(data_batched.size(0))).to(device)  # full videos
         ones_label = Variable(torch.ones(data_batched.size(0)) + (torch.rand(data_batched.size(0)) - 0.5) * 0.2).to(device)  # full videos
+        #zeros_label = Variable(torch.zeros(data_batched.size(0))).to(device)  # partial videos
         zeros_label = Variable(torch.zeros(data_batched.size(0)) + torch.rand(data_batched.size(0)) * 0.3).to(device)  # partial videos
 
         # batch normalization
@@ -70,7 +72,7 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
             progress_label = vdpro.GetProgressLabel(ratio)
             X_gen_partial = G1_model(z_sample, progress_label)
             G1_loss = F.mse_loss(X_gen_partial, X_partial)
-            G1_loss.backward()
+            G1_loss.backward(retain_graph=True)
             E_solver.step()
             G1_solver.step()
             E_solver.zero_grad()
@@ -91,7 +93,7 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
                 D_loss_fake = F.binary_cross_entropy_with_logits(D_fake_score[:, num_class], zeros_label)
                 D_loss = D_loss_action + D_loss_real + D_loss_fake
 
-                D_loss.backward()
+                D_loss.backward(retain_graph=True)
                 D_solver.step()  # update parameters in D1_solver
 
                 # reset gradient
@@ -110,7 +112,7 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
             G_loss = G2_loss + G_loss_action
             #G_loss = G2_loss + G_loss_action + G_loss_fake
 
-            G_loss.backward()
+            G_loss.backward(retain_graph=True)
             E_solver.step()
             G2_solver.step()
 
@@ -160,6 +162,8 @@ def test(epoch, device, test_data_loader, model, E_model, G1_model, G2_model, D_
     losses = AverageMeter()
     top1 = AverageMeter()
     top5 = AverageMeter()
+    OR_top1 = AverageMeter()
+    OR_top5 = AverageMeter()
 
     model.eval()
     end = time.time()
@@ -204,23 +208,26 @@ def test(epoch, device, test_data_loader, model, E_model, G1_model, G2_model, D_
                 # forward again
                 D_real_score2 = D_model(X_partial, progress_label)
                 output2 = D_real_score2[:, :num_class]
-                #outputs = output2 #torch.mean(output1, output2)
+                OR_outputs = output2 #torch.mean(output1, output2)
                 outputs = (output1 + output2) / 2 #torch.mean(output1, output2)
  
                 loss = criterion(outputs, label_batched)
                 max_value, max_index = torch.max(outputs.data, 1)
                 prec1, prec5 = accuracy(outputs.data, label_batched.data, topk=(1, 5))
+                OR_prec1, OR_prec5 = accuracy(OR_outputs.data, label_batched.data, topk=(1, 5))
 
                 losses.update(loss.data[0], inputs.size(0))
                 top1.update(prec1[0], inputs.size(0))
                 top5.update(prec5[0], inputs.size(0))
+                OR_top1.update(OR_prec1[0], inputs.size(0))
+                OR_top5.update(OR_prec5[0], inputs.size(0))
                 # measure elapsed time
 
         batch_time.update(time.time() - end)
         end = time.time()
 
         # plot progress
-        bar.suffix  = '({batch}/{size}) Data: {data:.3f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:} | Loss: {loss:.4f} | top1: {top1: .4f} | top5: {top5: .4f}'.format(
+        bar.suffix  = '({batch}/{size}) Data: {data:.3f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:} | Loss: {loss:.4f} | top1: {top1: .4f} | top5: {top5: .4f} | OR_top1: {OR_top1: .4f} | OR_top5: {OR_top5: .4f}'.format(
                     batch=i_batch + 1,
                     size=len(test_data_loader),
                     data=data_time.avg,
@@ -230,6 +237,8 @@ def test(epoch, device, test_data_loader, model, E_model, G1_model, G2_model, D_
                     loss=losses.avg,
                     top1=top1.avg,
                     top5=top5.avg,
+                    OR_top1=OR_top1.avg,
+                    OR_top5=OR_top5.avg,
                     )
         bar.next()
     bar.finish()

@@ -25,6 +25,17 @@ class _gcn(nn.Module):
         self.gclassifier = nn.Linear(2048, num_classes)
         self.pool = nn.AdaptiveAvgPool1d(1)
         self.lstm = nn.LSTM(1024*3, 2048, 1)
+        #self.conv1dc = nn.Conv1d(in_channels=256, out_channels=128*2, kernel_size=1, \
+        #padding=0, stride=1, dilation=1, bias=False)
+        
+        #self.convLinear = nn.Conv1d(in_channels=512, out_channels=num_classes, kernel_size=1, \
+        #padding=0, stride=1, dilation=1, bias=False)
+        self.gclassifier = nn.Linear(2048, num_classes)
+        self.pool = nn.AdaptiveAvgPool1d(1)
+        #self.avg_pool = nn.AdaptiveAvgPool1d(1)
+        #self.linear = nn.Linear(256, num_classes)
+        self.lstm = nn.LSTM(1024*3, 2048, 1)
+        #self.lstm = nn.LSTM(128, 128, 1)
 
     def forward(self, x, dist):
         [N, T, M, C, H, W] = x.shape
@@ -36,10 +47,8 @@ class _gcn(nn.Module):
         
         node1 = self.conv1da(base_out.permute(0,2,1))
         node1 = node1.view(N*T, 2, 2048, 12)
-
         node1b = torch.einsum('nkcv,nkvw->ncw', (node1, distb.view(N*T, 2, 12, 12).float())) 
         node1c = torch.einsum('nkcv,nkvw->ncw', (node1, distc.view(N*T, 2, 12, 12).float()))
-
         node1 = node1b+node1c
         node1 = F.relu(node1)
        

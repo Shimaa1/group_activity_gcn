@@ -7,6 +7,8 @@ import video_dataset_processing as vdpro
 import time
 import util
 from utils import Bar, Logger, AverageMeter, accuracy, mkdir_p, savefig
+from losses import TripletLoss
+
 
 def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, G1_solver, G2_model, G2_solver, D_model,
           D_solver, train_file, num_class):
@@ -15,6 +17,7 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
 
     batch_time = AverageMeter()
     data_time = AverageMeter()
+    T_losses = AverageMeter()
     G1_losses = AverageMeter()
     G2_losses = AverageMeter()
     G_action_losses = AverageMeter()
@@ -29,16 +32,23 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
 
     #ratio_list = [0.2, 0.5, 0.8]
     ratio_list = [0.5]
-    for i_batch, (inputs, targets, dists) in enumerate(train_data_loader):
+    #for i_batch, (inputs, targets, dists) in enumerate(train_data_loader):
+    for i_batch, (inputs, targets, dists, pos_inputs, pos_dists, neg_inputs, neg_dists) in enumerate(train_data_loader):
         start = time.time()
         inputs = inputs.to(device)
         label_batched = targets.to(device)
         dists = dists.to(device)
+        pos_inputs = pos_inputs.to(device)
+        neg_inputs = neg_inputs.to(device)
+        pos_dists = pos_dists.to(device)
+        neg_dists = neg_dists.to(device)
 
         data_time.update(time.time() - end)
 
         #with torch.no_grad():
         _, data_batched = model(inputs, dists)
+        _, pos_data_batched = model(pos_inputs, pos_dists)
+        _, neg_data_batched = model(neg_inputs, neg_dists)
 
         length_full = data_batched.size(1)
 
@@ -51,15 +61,29 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
         # batch normalization
         max_len = length_full
         X_full = data_batched[:,-1,:]
+        #pos_partial = pos_data_batched[:,-1,:]
+        #neg_partial = neg_data_batched[:,-1,:]
 
         # sample partial data
         for ratio in ratio_list:    
             X_partial, length_partial = vdpro.sample_data(data_batched, length_full, ratio)
+            pos_partial, length_partial = vdpro.sample_data(pos_data_batched, length_full, ratio)
+            neg_partial, length_partial = vdpro.sample_data(neg_data_batched, length_full, ratio)
             max_len_partial = length_partial
 
             # temporal pooling
             # BEGIN optimize E and G1
             z_sample = E_model(X_partial)
+            pos_z_sample = E_model(pos_partial)
+            neg_z_sample = E_model(neg_partial)
+            margin = 1.
+            T_criterion = TripletLoss(margin)
+            T_loss = T_criterion(z_sample, pos_z_sample, neg_z_sample)
+            T_loss.backward(retain_graph=True)
+            E_solver.step()
+            E_solver.zero_grad()
+
+
             progress_label = vdpro.GetProgressLabel(ratio)
             X_gen_partial = G1_model(z_sample, progress_label)
             G1_loss = 0.001*L1_criterion(X_gen_partial, X_partial)
@@ -86,7 +110,6 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
 
                 D_loss.backward(retain_graph=True)
                 D_solver.step()  # update parameters in D1_solver
-
                 # reset gradient
                 D_solver.zero_grad()
             # END optimizing D
@@ -112,6 +135,7 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
             G2_solver.zero_grad()
             # END optimizing E, G2
        
+            T_losses.update(T_loss.data[0], inputs.size(0))
             G1_losses.update(G1_loss.data[0], inputs.size(0))
             G2_losses.update(G2_loss.data[0], inputs.size(0))
             G_action_losses.update(G_loss_action.data[0], inputs.size(0))
@@ -123,13 +147,14 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
             end = time.time()
 
         # plot progress
-        bar.suffix  = '({batch}/{size}) Data: {data:.3f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:} | G1_loss: {G1_loss: .4f} | G2_loss: {G2_loss: .4f} | D_action_loss: {D_action_loss: .4f} | D_real_loss: {D_real_loss: .4f} | D_fake_loss: {D_fake_loss: .4f}'.format(
+        bar.suffix  = '({batch}/{size}) Data: {data:.3f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:} | T_loss: {T_loss: .4f} | G1_loss: {G1_loss: .4f} | G2_loss: {G2_loss: .4f} | D_action_loss: {D_action_loss: .4f} | D_real_loss: {D_real_loss: .4f} | D_fake_loss: {D_fake_loss: .4f}'.format(
                     batch=i_batch + 1,
                     size=len(train_data_loader),
                     data=data_time.avg,
                     bt=batch_time.avg,
                     total=bar.elapsed_td,
                     eta=bar.eta_td,
+                    T_loss=T_losses.avg,
                     G1_loss=G1_losses.avg,
                     G2_loss=G2_losses.avg,
                     #G_action_loss=G_action_losses.avg,
@@ -233,5 +258,6 @@ def test(epoch, device, test_data_loader, model, E_model, G1_model, G2_model, D_
                     )
         bar.next()
     bar.finish()
+    model.train()
     return (losses.avg, top1.avg)
     #return num_total_correct / num_total

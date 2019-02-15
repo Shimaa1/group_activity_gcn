@@ -53,20 +53,17 @@ class VolleyballDataset(Dataset):
 
     def __getitem__(self, index):
         # Loading and preprocessing.
-        labels = np.array(self.labels[index])
+        label = np.array(self.labels[index])
+        pos_index = np.random.choice(np.where((self.labels==label))[0])
+        neg_index = np.random.choice(np.where((self.labels!=label))[0])
+
         buffer, dist= self.load_frames(self.fnames[index], self.bboxes[index])
-        # buffer = self.transform2(buffer)
+        pos_buffer, pos_dist= self.load_frames(self.fnames[pos_index], self.bboxes[pos_index])
+        neg_buffer, neg_dist= self.load_frames(self.fnames[neg_index], self.bboxes[neg_index])
 
-        # if self.split == 'test':
-        #     # Perform data augmentation
-        #     buffer = self.randomflip(buffer)
-        # buffer = self.normalize(buffer)
-        # buffer = self.to_tensor(buffer)
-
-        return torch.from_numpy(buffer), torch.from_numpy(labels), \
-        torch.from_numpy(dist)
-        #return torch.from_numpy(buffer[::2,:,:,:,:]), torch.from_numpy(labels), \
-        #torch.from_numpy(dist[::2,:,:])
+        return torch.from_numpy(buffer), torch.from_numpy(label), torch.from_numpy(dist), \
+        torch.from_numpy(pos_buffer), torch.from_numpy(pos_dist), torch.from_numpy(neg_buffer), torch.from_numpy(neg_dist)
+        #return torch.from_numpy(buffer), torch.from_numpy(labels), torch.from_numpy(dist)
 
     def randomflip(self, buffer):
         """Horizontally flip the given image and ground truth randomly with a probability of 0.5."""
@@ -117,7 +114,7 @@ class VolleyballDataset(Dataset):
                 det_lines.append(det_lines[-(i+1)])  #person number 12
 
         frames = sorted([os.path.join(file_dir, img) for img in os.listdir(file_dir)])
-        frame_count = len(frames)-9
+        frame_count = len(frames)-16
 
         buffer = np.empty((frame_count, 12, 3, 109, 64), np.dtype('float32'))
         dist = np.zeros((frame_count, 3, 2, 12, 12), np.dtype('float64'))

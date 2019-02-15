@@ -24,7 +24,9 @@ import torchvision.models as models
 from torch.autograd import Variable
 from tqdm import tqdm
 
-from dataset_vol_graph_early import VolleyballDataset
+from dataset_vol_graph_early16 import VolleyballDataset
+#from dataset_vol_graph_early import VolleyballDataset
+#from dataset_vol_graph_early import VolleyballDataset
 #from dataset_vol_graph_mid5 import VolleyballDataset
 from utils import Bar, Logger, AverageMeter, accuracy, mkdir_p, savefig
 from models.cifar.vgg19 import vgg
@@ -150,9 +152,9 @@ def main():
     testloader = DataLoader(VolleyballDataset(split='test', transforms=transform_test), \
     batch_size=args.test_batch, shuffle=False, num_workers=args.workers)
 
-    x_dim = 256
-    h_dim = 64
-    z_dim = 64
+    x_dim = 2048
+    h_dim = 1024
+    z_dim = 1024
     E_model = GAN.Encoder(x_dim, h_dim, z_dim)
     G1 = GAN.Decoder1(z_dim, h_dim, x_dim)
     G2 = GAN.Decoder2(z_dim, h_dim, x_dim)

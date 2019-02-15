@@ -27,8 +27,8 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
 
     bar = Bar('Processing', max=len(train_data_loader)) 
 
-    ratio_list = [0.2, 0.5, 0.8]
-    #ratio_list = [0.5]
+    #ratio_list = [0.2, 0.5, 0.8]
+    ratio_list = [0.5]
     for i_batch, (inputs, targets, dists) in enumerate(train_data_loader):
         start = time.time()
         inputs = inputs.to(device)

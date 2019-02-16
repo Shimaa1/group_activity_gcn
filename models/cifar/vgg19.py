@@ -29,10 +29,10 @@ class vgg(_gcn):
             model.classifier = nn.Sequential(
                 nn.Linear(3072, 4096),
                 nn.ReLU(True),
-                nn.Dropout(),
+                nn.Dropout(p=0),
                 nn.Linear(4096, 4096),
                 nn.ReLU(True),
-                nn.Dropout(),
+                nn.Dropout(p=0),
                 nn.Linear(4096, 9),
             )
    

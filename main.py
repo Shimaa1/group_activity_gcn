@@ -96,9 +96,6 @@ device = torch.device(args.gpu_id if torch.cuda.is_available() else "cpu")
 
 state = {k: v for k, v in args._get_kwargs()}
 
-# Validate dataset
-# assert args.dataset == 'cifar10' or args.dataset == 'cifar100', 'Dataset can only be cifar10 or cifar100.'
-
 # Use CUDA
 #os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu_id
 use_cuda = torch.cuda.is_available()
@@ -207,8 +204,6 @@ def main():
     #model resume
     model.load_state_dict(torch.load(args.group_pretrain)['state_dict'])
 
-    #for k,v in model.state_dict().items():
-    #    print(k)
 
     cudnn.benchmark = True
     print('    Total params: %.2fM' % (sum(p.numel() for p in model.parameters())/1000000.0))
@@ -217,7 +212,7 @@ def main():
     test_file = open("test_out.txt", "w")
 
     util.print_model(E_model, G1, G2, D_model)
-
+    print(model)
     # adjust learning rate
     scheduler_E = optim.lr_scheduler.StepLR(E_solver, 100, 0.1)
     scheduler_G1 = optim.lr_scheduler.StepLR(G1_solver, 100, 0.1)
@@ -239,8 +234,8 @@ def main():
         best_acc = checkpoint['best_acc']
         start_epoch = checkpoint['epoch']
         E_model.load_state_dict(checkpoint['E_state_dict'])
-        G2.load_state_dict(checkpoint['G1_state_dict'])
-        G1.load_state_dict(checkpoint['G2_state_dict'])
+        G2.load_state_dict(checkpoint['G2_state_dict'])
+        G1.load_state_dict(checkpoint['G1_state_dict'])
         D_model.load_state_dict(checkpoint['D_state_dict'])
         model.load_state_dict(checkpoint['state_dict'])
         #optimizer.load_state_dict(checkpoint['optimizer'])
@@ -253,7 +248,8 @@ def main():
     if args.evaluate:
         print('\nEvaluation only')
         test_loss, level_accuracy = T.test(epoch, device, testloader, model, E_model, G1, G2, D_model, test_file, num_classes)
-        test_acc = torch.mean(level_accuracy)
+        test_acc = level_accuracy
+        #test_acc = torch.mean(level_accuracy)
         print(' Test Loss:  %.8f, Test Acc:  %.2f' % (test_loss, test_acc))
         return
     
@@ -276,6 +272,7 @@ def main():
         print(train_loss, test_loss, test_acc)
 
         is_best = test_acc > best_acc
+        print(best_acc)
         best_acc = max(test_acc, best_acc)
         save_checkpoint({
                 'epoch': epoch + 1,

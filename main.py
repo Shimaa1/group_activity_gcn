@@ -90,6 +90,7 @@ parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true',
 #Device options
 parser.add_argument('--gpu-id', default='cuda:0', type=str,
                     help='id(s) for CUDA_VISIBLE_DEVICES')
+parser.add_argument('--gpu', default='0', help='GPU to use [default: GPU 0]')
 
 args = parser.parse_args()
 device = torch.device(args.gpu_id if torch.cuda.is_available() else "cpu")
@@ -97,8 +98,9 @@ device = torch.device(args.gpu_id if torch.cuda.is_available() else "cpu")
 state = {k: v for k, v in args._get_kwargs()}
 
 # Use CUDA
-#os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu_id
-use_cuda = torch.cuda.is_available()
+os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
+use_cuda = True
+#use_cuda = torch.cuda.is_available()
 
 # Random seed
 if args.manualSeed is None:
@@ -154,17 +156,26 @@ def main():
     E_model = GAN.Encoder(x_dim, h_dim, z_dim)
     G1 = GAN.Decoder1(z_dim, h_dim, x_dim)
     G2 = GAN.Decoder2(z_dim, h_dim, x_dim)
-    D_model = GAN.Discriminator(x_dim, h_dim, num_classes)
+    D1 = GAN.Discriminator1(x_dim, h_dim, num_classes, args.group_pretrain)
+    D2 = GAN.Discriminator2(x_dim, h_dim)
+
     E_solver = optim.Adam(E_model.parameters(), lr=state['lr'])
     G1_solver = optim.Adam(G1.parameters(), lr=state['lr'])
     G2_solver = optim.Adam(G2.parameters(), lr=state['lr'])
-    D_solver = optim.Adam(D_model.parameters(), lr=state['lr'])
+    D1_solver = optim.Adam(D1.parameters(), lr=state['lr'])
+    D2_solver = optim.Adam(D2.parameters(), lr=state['lr'])
 
-    E_model.to(device)
-    G1.to(device)
-    G2.to(device)
-    D_model.to(device)
+    #E_model.to(device)
+    #G1.to(device)
+    #G2.to(device)
+    #D1.to(device)
+    #D2.to(device)
 
+    E_model.cuda()
+    G1.cuda()
+    G2.cuda()
+    D1.cuda()
+    D2.cuda()
     # Model
     print("==> creating model '{}'".format(args.arch))
     if args.arch.startswith('resnext'):
@@ -199,11 +210,11 @@ def main():
         model = vgg(num_classes=num_classes, net=args.arch, model_dir=args.model_dir)
 
     model.create_architecture()
-    model.to(device)
+    model.cuda()
+    #model.to(device)
 
     #model resume
     model.load_state_dict(torch.load(args.group_pretrain)['state_dict'])
-
 
     cudnn.benchmark = True
     print('    Total params: %.2fM' % (sum(p.numel() for p in model.parameters())/1000000.0))
@@ -211,13 +222,14 @@ def main():
     train_file = open("train_out.txt", "w")
     test_file = open("test_out.txt", "w")
 
-    util.print_model(E_model, G1, G2, D_model)
-    print(model)
+    #util.print_model(E_model, G1, G2, D1_model)
+    
     # adjust learning rate
     scheduler_E = optim.lr_scheduler.StepLR(E_solver, 100, 0.1)
     scheduler_G1 = optim.lr_scheduler.StepLR(G1_solver, 100, 0.1)
     scheduler_G2 = optim.lr_scheduler.StepLR(G2_solver, 100, 0.1)
-    scheduler_D = optim.lr_scheduler.StepLR(D_solver, 100, 0.1)
+    scheduler_D1 = optim.lr_scheduler.StepLR(D1_solver, 100, 0.1)
+    scheduler_D2 = optim.lr_scheduler.StepLR(D2_solver, 100, 0.1)
 
 
     criterion = nn.CrossEntropyLoss()
@@ -236,7 +248,8 @@ def main():
         E_model.load_state_dict(checkpoint['E_state_dict'])
         G2.load_state_dict(checkpoint['G2_state_dict'])
         G1.load_state_dict(checkpoint['G1_state_dict'])
-        D_model.load_state_dict(checkpoint['D_state_dict'])
+        D1.load_state_dict(checkpoint['D1_state_dict'])
+        D2.load_state_dict(checkpoint['D2_state_dict'])
         model.load_state_dict(checkpoint['state_dict'])
         #optimizer.load_state_dict(checkpoint['optimizer'])
         logger = Logger(os.path.join(args.checkpoint, 'log.txt'), title=title, resume=True)
@@ -258,13 +271,14 @@ def main():
         scheduler_E.step()
         scheduler_G1.step()
         scheduler_G2.step()
-        scheduler_D.step()
+        scheduler_D1.step()
+        scheduler_D2.step()
 
         #adjust_learning_rate(optimizer, epoch)
         print('\nEpoch: [%d | %d] LR: %f' % (epoch + 1, args.epochs, state['lr']))
 
-        train_loss = T.train(epoch, device, trainloader, model, E_model, E_solver, G1, G1_solver, G2, G2_solver, D_model, D_solver, train_file, num_classes)
-        test_loss, level_accuracy = T.test(epoch, device, testloader, model, E_model, G1, G2, D_model, test_file, num_classes)
+        train_loss = T.train(epoch, device, trainloader, model, E_model, E_solver, G1, G1_solver, G2, G2_solver, D1, D1_solver, D2, D2_solver, train_file, num_classes)
+        test_loss, level_accuracy = T.test(epoch, device, testloader, model, E_model, G1, G2, D1, D2, test_file, num_classes)
 
         # save model
         test_acc = torch.mean(level_accuracy)
@@ -280,7 +294,8 @@ def main():
                 'E_state_dict': E_model.state_dict(),
                 'G1_state_dict': G1.state_dict(),
                 'G2_state_dict': G2.state_dict(),
-                'D_state_dict': D_model.state_dict(),
+                'D1_state_dict': D1.state_dict(),
+                'D2_state_dict': D2.state_dict(),
                 'acc': test_acc,
                 'best_acc': best_acc,
                 #'optimizer' : optimizer.state_dict(),

@@ -68,17 +68,44 @@ class Decoder2(nn.Module):  # for generating partial video features
 		h = self.relu(self.fc1(in_data))
 		return self.sigmoid(self.fc2(h))
 
-
-class Discriminator(nn.Module):
-	def __init__(self, x_dim, h_dim, num_class):
-		super(Discriminator, self).__init__()
-		self.dim = x_dim
+class Discriminator1(nn.Module):
+	def __init__(self, x_dim, h_dim, num_class, model_dir):
+		super(Discriminator1, self).__init__()
+		#self.dim = x_dim
 		self.x_dim = x_dim
 		self.h_dim = h_dim
 		self.num_class = num_class
 
-		#self.fc1 = nn.Linear(x_dim, num_class)
-		self.fc1 = nn.Linear(x_dim+10, num_class+1)
+		self.fc1 = nn.Linear(x_dim, num_class)
+		self._load_pretrained_weights(model_dir)
+
+	def forward(self, x):
+		#x = vdpro.CombineSample(x, l, 10)
+		return self.fc1(x)
+
+	def _load_pretrained_weights(self, model_dir):
+		corresp_name = {
+				"gclassifier.weight": "fc1.weight",
+				"gclassifier.bias": "fc1.bias",                               
+				}
+		p_dict = torch.load(model_dir)['state_dict']
+		#p_dict = torch.load(Path.group_dir('vgg19'))['state_dict']
+		s_dict = self.state_dict()
+		for item in s_dict:
+			print('sdict', item)
+		for name in p_dict:
+			print('pdict', name)
+		#assert 1==0
+		self.load_state_dict({corresp_name[k]:v for k,v in p_dict.items() if k in corresp_name})
+
+class Discriminator2(nn.Module):
+	def __init__(self, x_dim, h_dim):
+		super(Discriminator2, self).__init__()
+		self.dim = x_dim
+		self.x_dim = x_dim
+		self.h_dim = h_dim
+
+		self.fc1 = nn.Linear(x_dim+10, 1)
 		#self._load_pretrained_weights()
 		#self.fc2 = nn.Linear(h_dim, num_class+1)
 		#self.relu = nn.LeakyReLU()
@@ -91,16 +118,3 @@ class Discriminator(nn.Module):
 		x = vdpro.CombineSample(x, l, 10)
 		return self.fc1(x)
 
-	def _load_pretrained_weights(self):
-		corresp_name = {
-				"gclassifier.weights": "fc1.weight",
-				"gclassifier.bias": "fc1.bias",                               
-				}
-		p_dict = torch.load(Path.group_dir('vgg19'))['state_dict']
-		s_dict = self.state_dict()
-		for item in s_dict:
-			print('sdict', item)
-		for name in p_dict:
-			print('pdict', name)
-		#assert 1==0
-		self.load_state_dict({corresp_name[k]:v for k,v in p_dict.items() if k in corresp_name})

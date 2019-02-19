@@ -98,7 +98,7 @@ device = torch.device(args.gpu_id if torch.cuda.is_available() else "cpu")
 state = {k: v for k, v in args._get_kwargs()}
 
 # Use CUDA
-os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
+#os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
 
 use_cuda = True
 #use_cuda = torch.cuda.is_available()
@@ -171,17 +171,18 @@ def main():
     G2_solver = optim.Adam(G2.parameters(), lr=args.lr)
     D1_solver = optim.Adam(D1.parameters(), lr=args.lr)
     D2_solver = optim.Adam(D2.parameters(), lr=args.lr)
-    #E_model.to(device)
-    #G1.to(device)
-    #G2.to(device)
-    #D1.to(device)
-    #D2.to(device)
 
-    E_model.cuda()
-    G1.cuda()
-    G2.cuda()
-    D1.cuda()
-    D2.cuda()
+    E_model.to(device)
+    G1.to(device)
+    G2.to(device)
+    D1.to(device)
+    D2.to(device)
+
+    #E_model.cuda()
+    #G1.cuda()
+    #G2.cuda()
+    #D1.cuda()
+    #D2.cuda()
     # Model
     print("==> creating model '{}'".format(args.arch))
     if args.arch.startswith('resnext'):
@@ -216,8 +217,8 @@ def main():
         model = vgg(num_classes=num_classes, net=args.arch, model_dir=args.model_dir)
 
     model.create_architecture()
-    model.cuda()
-    #model.to(device)
+    #model.cuda()
+    model.to(device)
 
     #model resume
     model.load_state_dict(torch.load(args.group_pretrain)['state_dict'])

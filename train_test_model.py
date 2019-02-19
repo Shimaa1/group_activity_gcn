@@ -41,12 +41,12 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
     for i_batch, (inputs, targets, dists) in enumerate(train_data_loader):
     #for i_batch, (inputs, targets, dists, pos_inputs, pos_dists, neg_inputs, neg_dists) in enumerate(train_data_loader):
         start = time.time()
-        #inputs = inputs.to(device)
-        #label_batched = targets.to(device)
-        #dists = dists.to(device)
-        inputs = inputs.cuda()
-        label_batched = targets.cuda()
-        dists = dists.cuda()
+        inputs = inputs.to(device)
+        label_batched = targets.to(device)
+        dists = dists.to(device)
+        #inputs = inputs.cuda()
+        #label_batched = targets.cuda()
+        #dists = dists.cuda()
         #pos_inputs = pos_inputs.to(device)
         #neg_inputs = neg_inputs.to(device)
         #pos_dists = pos_dists.to(device)
@@ -63,11 +63,11 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
 
         # labels for GAN
         #ones_label = Variable(torch.ones(data_batched.size(0))).to(device)  # full videos
-        ones_label = Variable(torch.ones(data_batched.size(0)) + (torch.rand(data_batched.size(0)) - 0.5) * 0.2).cuda()  # full videos
-        #ones_label = Variable(torch.ones(data_batched.size(0)) + (torch.rand(data_batched.size(0)) - 0.5) * 0.2).to(device)  # full videos
+        #ones_label = Variable(torch.ones(data_batched.size(0)) + (torch.rand(data_batched.size(0)) - 0.5) * 0.2).cuda()  # full videos
+        ones_label = Variable(torch.ones(data_batched.size(0)) + (torch.rand(data_batched.size(0)) - 0.5) * 0.2).to(device)  # full videos
         #zeros_label = Variable(torch.zeros(data_batched.size(0))).to(device)  # partial videos
-        zeros_label = Variable(torch.zeros(data_batched.size(0)) + torch.rand(data_batched.size(0)) * 0.3).cuda()  # partial videos
-        #zeros_label = Variable(torch.zeros(data_batched.size(0)) + torch.rand(data_batched.size(0)) * 0.3).to(device)  # partial videos
+        #zeros_label = Variable(torch.zeros(data_batched.size(0)) + torch.rand(data_batched.size(0)) * 0.3).cuda()  # partial videos
+        zeros_label = Variable(torch.zeros(data_batched.size(0)) + torch.rand(data_batched.size(0)) * 0.3).to(device)  # partial videos
 
         # batch normalization
         max_len = length_full
@@ -254,13 +254,13 @@ def test(epoch, device, test_data_loader, model, E_model, G1_model, G2_model, D1
 
         data_time.update(time.time() - end)
         #start = time.time()
-        inputs = inputs.cuda()
-        label_batched = targets.cuda()
-        dists = dists.cuda()
+        #inputs = inputs.cuda()
+        #label_batched = targets.cuda()
+        #dists = dists.cuda()
 
-        #inputs = inputs.to(device)
-        #label_batched = targets.to(device)
-        #dists = dists.to(device)
+        inputs = inputs.to(device)
+        label_batched = targets.to(device)
+        dists = dists.to(device)
         with torch.no_grad():
             _, data_batched = model(inputs, dists)
 

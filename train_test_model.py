@@ -97,6 +97,11 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
             progress_label = vdpro.GetProgressLabel(ratio)
             X_gen_partial = G1_model(z_sample, progress_label)
             G1_loss = F.mse_loss(X_gen_partial, X_partial)
+            G1_loss.backward(retain_graph=True)
+            E_solver.step()
+            G1_solver.step()
+            E_solver.zero_grad()
+            G1_solver.zero_grad()
             #G1_loss = L1_criterion(X_gen_partial, X_partial)
             #G1_loss.backward(retain_graph=True)
             #E_solver.step()
@@ -106,6 +111,7 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
             # END optimizing E, G1
 
             progress_label = vdpro.GetProgressLabel(1.0)
+            #noise = torch.FloatTensor(np.random.normal(loc=0.0, scale=0.3, size=(X_gen_partial.shape))) 
             X_gen_full = G2_model(z_sample, progress_label)
             #print(X_gen_full)
 
@@ -121,16 +127,14 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
             #D_loss_action = F.cross_entropy(D1_cls_real_score, label_batched)
             D_loss_real = F.binary_cross_entropy_with_logits(D2_real_score[:,0], ones_label)
             D_loss_fake = F.binary_cross_entropy_with_logits(D2_fake_score[:,0], zeros_label)
-            G_loss = G1_loss + D_loss_action + G2_loss + D_loss_fake
+            G_loss_fake = F.binary_cross_entropy_with_logits(D2_fake_score[:,0], ones_label)
+            G_loss = D_loss_action + G2_loss + G_loss_fake
 
             G_loss.backward(retain_graph=True)
             E_solver.step()
-            G2_solver.step()
-            G1_solver.step()
-            
+            G2_solver.step() 
             E_solver.zero_grad()
             G2_solver.zero_grad()
-            G1_solver.zero_grad()
 
             if(i_batch%D_interval==0):
             # BEGIN optimize D -- true or fake full videos
@@ -158,13 +162,15 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
                 #D_loss = D_loss_real + D_loss_fake
 
                 #D_loss.backward(retain_graph=True)
-                D_loss = D_loss_action + G2_loss + D_loss_fake + D_loss_real
+                D_loss = G2_loss + D_loss_fake + D_loss_real
                 D_loss.backward()
                 #D1_solver.step()
+                D1_solver.step()
                 D2_solver.step()  # update parameters in D1_solver
                 # reset gradient
                 #D1_solver.zero_grad()
                 D2_solver.zero_grad()
+                D1_solver.zero_grad()
             # END optimizing D
 
             # BEGIN optimize E, G2 -- generator
@@ -190,7 +196,7 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
             # END optimizing E, G2
        
             #T_losses.update(T_loss.data[0], inputs.size(0))
-            #G1_losses.update(G1_loss.data[0], inputs.size(0))
+            G1_losses.update(G1_loss.data[0], inputs.size(0))
             G2_losses.update(G2_loss.data[0], inputs.size(0))
             #G_action_losses.update(G_loss_action.data[0], inputs.size(0))
             D_action_losses.update(D_loss_action.data[0], inputs.size(0))
@@ -201,7 +207,7 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
             end = time.time()
 
         # plot progress
-        bar.suffix  = '({batch}/{size}) Data: {data:.3f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:} | G2_loss: {G2_loss: .4f} | D_action_loss: {D_action_loss: .4f} | D_real_loss: {D_real_loss: .4f} | D_fake_loss: {D_fake_loss: .4f}'.format(
+        bar.suffix  = '({batch}/{size}) Data: {data:.3f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:} | G1_loss: {G1_loss: .4f}| G2_loss: {G2_loss: .4f} | D_action_loss: {D_action_loss: .4f} | D_real_loss: {D_real_loss: .4f} | D_fake_loss: {D_fake_loss: .4f}'.format(
                     batch=i_batch + 1,
                     size=len(train_data_loader),
                     data=data_time.avg,
@@ -209,7 +215,7 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
                     total=bar.elapsed_td,
                     eta=bar.eta_td,
                     #T_loss=T_losses.avg,
-                    #G1_loss=G1_losses.avg,
+                    G1_loss=G1_losses.avg,
                     G2_loss=G2_losses.avg,
                     #G_action_loss=G_action_losses.avg,
                     D_action_loss=D_action_losses.avg,

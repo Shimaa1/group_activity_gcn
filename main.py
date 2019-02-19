@@ -90,7 +90,7 @@ parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true',
 #Device options
 parser.add_argument('--gpu-id', default='cuda:0', type=str,
                     help='id(s) for CUDA_VISIBLE_DEVICES')
-parser.add_argument('--gpu', default='0', help='GPU to use [default: GPU 0]')
+parser.add_argument('--gpu', default='3', type=str, help='GPU to use [default: GPU 0]')
 
 args = parser.parse_args()
 device = torch.device(args.gpu_id if torch.cuda.is_available() else "cpu")
@@ -99,6 +99,7 @@ state = {k: v for k, v in args._get_kwargs()}
 
 # Use CUDA
 os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
+
 use_cuda = True
 #use_cuda = torch.cuda.is_available()
 
@@ -159,12 +160,17 @@ def main():
     D1 = GAN.Discriminator1(x_dim, h_dim, num_classes, args.group_pretrain)
     D2 = GAN.Discriminator2(x_dim, h_dim)
 
-    E_solver = optim.Adam(E_model.parameters(), lr=state['lr'])
-    G1_solver = optim.Adam(G1.parameters(), lr=state['lr'])
-    G2_solver = optim.Adam(G2.parameters(), lr=state['lr'])
-    D1_solver = optim.Adam(D1.parameters(), lr=state['lr'])
-    D2_solver = optim.Adam(D2.parameters(), lr=state['lr'])
+    #E_solver = optim.Adam(E_model.parameters(), lr=state['lr'])
+    #G1_solver = optim.Adam(G1.parameters(), lr=state['lr'])
+    #G2_solver = optim.Adam(G2.parameters(), lr=state['lr'])
+    #D1_solver = optim.Adam(D1.parameters(), lr=state['lr'])
+    #D2_solver = optim.Adam(D2.parameters(), lr=state['lr'])
 
+    E_solver = optim.Adam(E_model.parameters(), lr=args.lr)
+    G1_solver = optim.Adam(G1.parameters(), lr=args.lr)
+    G2_solver = optim.Adam(G2.parameters(), lr=args.lr)
+    D1_solver = optim.Adam(D1.parameters(), lr=args.lr)
+    D2_solver = optim.Adam(D2.parameters(), lr=args.lr)
     #E_model.to(device)
     #G1.to(device)
     #G2.to(device)

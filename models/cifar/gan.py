@@ -16,6 +16,7 @@ class Encoder(nn.Module):
 		self.fc1 = nn.Linear(x_dim, h_dim)
 		self.fc21 = nn.Linear(h_dim, z_dim)
 		self.fc22 = nn.Linear(h_dim, z_dim)
+		self._initialize_weights()
 
 	def reparameterize(self, mu, logvar):
 		if self.training:
@@ -32,6 +33,13 @@ class Encoder(nn.Module):
 		z = self.reparameterize(mu, logvar)
 		return z
 
+	def _initialize_weights(self):
+    
+		for m in self.modules():
+			if isinstance(m, nn.Linear):
+				n = m.weight.size(1)
+				m.weight.data.normal_(0, 0.01)
+				m.bias.data.zero_()
 
 class Decoder1(nn.Module): # for generating full video features
 	def __init__(self, in_dim, h_dim, out_dim):
@@ -43,13 +51,21 @@ class Decoder1(nn.Module): # for generating full video features
 		self.relu = nn.LeakyReLU()
 		self.fc1 = nn.Linear(in_dim+10, h_dim)
 		self.fc2 = nn.Linear(h_dim, out_dim)
-		self.sigmoid = nn.Tanh()
+		self._initialize_weights()
+		#self.sigmoid = nn.Tanh()
 
 	def forward(self, in_data, l):
 		in_data = vdpro.CombineSample(in_data, l, 10)
 		h = self.relu(self.fc1(in_data))
-		return self.sigmoid(self.fc2(h))
+		return self.fc2(h)
 
+	def _initialize_weights(self):
+    
+		for m in self.modules():
+			if isinstance(m, nn.Linear):
+				n = m.weight.size(1)
+				m.weight.data.normal_(0, 0.01)
+				m.bias.data.zero_()
 
 class Decoder2(nn.Module):  # for generating partial video features
 	def __init__(self, in_dim, h_dim, out_dim):
@@ -61,12 +77,21 @@ class Decoder2(nn.Module):  # for generating partial video features
 		self.relu = nn.LeakyReLU()
 		self.fc1 = nn.Linear(in_dim+10, h_dim)
 		self.fc2 = nn.Linear(h_dim, out_dim)
-		self.sigmoid = nn.Tanh()
+		self._initialize_weights()
+		#self.sigmoid = nn.Tanh()
 
 	def forward(self, in_data, l):
 		in_data = vdpro.CombineSample(in_data, l, 10)
 		h = self.relu(self.fc1(in_data))
-		return self.sigmoid(self.fc2(h))
+		return self.fc2(h)
+
+	def _initialize_weights(self):
+    
+		for m in self.modules():
+			if isinstance(m, nn.Linear):
+				n = m.weight.size(1)
+				m.weight.data.normal_(0, 0.01)
+				m.bias.data.zero_()
 
 class Discriminator1(nn.Module):
 	def __init__(self, x_dim, h_dim, num_class, model_dir):
@@ -106,6 +131,7 @@ class Discriminator2(nn.Module):
 		self.h_dim = h_dim
 
 		self.fc1 = nn.Linear(x_dim+10, 1)
+		self._initialize_weights()
 		#self._load_pretrained_weights()
 		#self.fc2 = nn.Linear(h_dim, num_class+1)
 		#self.relu = nn.LeakyReLU()
@@ -118,3 +144,11 @@ class Discriminator2(nn.Module):
 		x = vdpro.CombineSample(x, l, 10)
 		return self.fc1(x)
 
+
+	def _initialize_weights(self):
+    
+		for m in self.modules():
+			if isinstance(m, nn.Linear):
+				n = m.weight.size(1)
+				m.weight.data.normal_(0, 0.01)
+				m.bias.data.zero_()

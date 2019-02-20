@@ -52,12 +52,12 @@ class Decoder1(nn.Module): # for generating full video features
 		self.fc1 = nn.Linear(in_dim+10, h_dim)
 		self.fc2 = nn.Linear(h_dim, out_dim)
 		self._initialize_weights()
-		#self.sigmoid = nn.Tanh()
+		self.sigmoid = nn.Tanh()
 
 	def forward(self, in_data, l):
 		in_data = vdpro.CombineSample(in_data, l, 10)
 		h = self.relu(self.fc1(in_data))
-		return self.fc2(h)
+		return self.sigmoid(self.fc2(h))
 
 	def _initialize_weights(self):
     
@@ -78,12 +78,12 @@ class Decoder2(nn.Module):  # for generating partial video features
 		self.fc1 = nn.Linear(in_dim+10, h_dim)
 		self.fc2 = nn.Linear(h_dim, out_dim)
 		self._initialize_weights()
-		#self.sigmoid = nn.Tanh()
+		self.sigmoid = nn.Tanh()
 
 	def forward(self, in_data, l):
 		in_data = vdpro.CombineSample(in_data, l, 10)
 		h = self.relu(self.fc1(in_data))
-		return self.fc2(h)
+		return self.sigmoid(self.fc2(h))
 
 	def _initialize_weights(self):
     

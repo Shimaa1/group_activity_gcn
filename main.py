@@ -153,7 +153,7 @@ def main():
 
     x_dim = 2048
     h_dim = 1024
-    z_dim = 1024
+    z_dim = 512
     E_model = GAN.Encoder(x_dim, h_dim, z_dim)
     G1 = GAN.Decoder1(z_dim, h_dim, x_dim)
     G2 = GAN.Decoder2(z_dim, h_dim, x_dim)

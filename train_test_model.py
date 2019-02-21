@@ -12,10 +12,10 @@ from losses import TripletLoss
 
 #def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, G1_solver, G2_model, G2_solver, D_model,
 #          D_solver, train_file, num_class):
-def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, G1_solver, G2_model, G2_solver, D1_model, D1_solver, D2_model,
+def train(epoch, device, train_data_loader, base_model, model_solver, E_model, E_solver, G1_model, G1_solver, G2_model, G2_solver, D1_model, D1_solver, D2_model,
           D2_solver, train_file, num_class):
     
-    model.train()
+    #model.train()
 
     batch_time = AverageMeter()
     data_time = AverageMeter()
@@ -55,7 +55,7 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
         data_time.update(time.time() - end)
 
         with torch.no_grad():
-            _, data_batched = model(inputs, dists)
+            _, data_batched = base_model(inputs, dists)
         #_, pos_data_batched = model(pos_inputs, pos_dists)
         #_, neg_data_batched = model(neg_inputs, neg_dists)
 
@@ -133,8 +133,10 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
             G_loss.backward(retain_graph=True)
             E_solver.step()
             G2_solver.step() 
+            model_solver.step() 
             E_solver.zero_grad()
             G2_solver.zero_grad()
+            model_solver.zero_grad()
 
             if(i_batch%D_interval==0):
             # BEGIN optimize D -- true or fake full videos
@@ -165,12 +167,12 @@ def train(epoch, device, train_data_loader, model, E_model, E_solver, G1_model, 
                 D_loss = G2_loss + D_loss_fake + D_loss_real
                 D_loss.backward()
                 #D1_solver.step()
-                D1_solver.step()
+                #D1_solver.step()
                 D2_solver.step()  # update parameters in D1_solver
                 # reset gradient
                 #D1_solver.zero_grad()
                 D2_solver.zero_grad()
-                D1_solver.zero_grad()
+                #D1_solver.zero_grad()
             # END optimizing D
 
             # BEGIN optimize E, G2 -- generator

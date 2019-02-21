@@ -219,6 +219,7 @@ def main():
     model.create_architecture()
     #model.cuda()
     model.to(device)
+    model_solver = optim.Adam(model.parameters(), lr=args.lr)
 
     #model resume
     model.load_state_dict(torch.load(args.group_pretrain)['state_dict'])
@@ -232,11 +233,12 @@ def main():
     #util.print_model(E_model, G1, G2, D1_model)
     
     # adjust learning rate
-    scheduler_E = optim.lr_scheduler.StepLR(E_solver, 100, 0.1)
-    scheduler_G1 = optim.lr_scheduler.StepLR(G1_solver, 100, 0.1)
-    scheduler_G2 = optim.lr_scheduler.StepLR(G2_solver, 100, 0.1)
-    scheduler_D1 = optim.lr_scheduler.StepLR(D1_solver, 100, 0.1)
-    scheduler_D2 = optim.lr_scheduler.StepLR(D2_solver, 100, 0.1)
+    scheduler_E = optim.lr_scheduler.StepLR(E_solver, 10, 0.1)
+    scheduler_G1 = optim.lr_scheduler.StepLR(G1_solver, 10, 0.1)
+    scheduler_G2 = optim.lr_scheduler.StepLR(G2_solver, 10, 0.1)
+    scheduler_D1 = optim.lr_scheduler.StepLR(D1_solver, 10, 0.1)
+    scheduler_D2 = optim.lr_scheduler.StepLR(D2_solver, 10, 0.1)
+    scheduler_model = optim.lr_scheduler.StepLR(model_solver, 10, 0.1)
 
 
     criterion = nn.CrossEntropyLoss()
@@ -280,11 +282,12 @@ def main():
         scheduler_G2.step()
         scheduler_D1.step()
         scheduler_D2.step()
+        scheduler_model.step()
 
         #adjust_learning_rate(optimizer, epoch)
         print('\nEpoch: [%d | %d] LR: %f' % (epoch + 1, args.epochs, state['lr']))
 
-        train_loss = T.train(epoch, device, trainloader, model, E_model, E_solver, G1, G1_solver, G2, G2_solver, D1, D1_solver, D2, D2_solver, train_file, num_classes)
+        train_loss = T.train(epoch, device, trainloader, model, model_solver, E_model, E_solver, G1, G1_solver, G2, G2_solver, D1, D1_solver, D2, D2_solver, train_file, num_classes)
         test_loss, level_accuracy = T.test(epoch, device, testloader, model, E_model, G1, G2, D1, D2, test_file, num_classes)
 
         # save model
